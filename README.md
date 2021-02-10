@@ -1,11 +1,19 @@
 # holy-notes
- A Powercord plugin that lets you note messages.
+ A Powercord plugin that lets you annotate messages in a Notebook as personal pins.
 
-I will not be working on this plugin anymore (as I am banned from Powercord) so I am putting it publicly on github for anyone who wants to continue it. 
 
 ### Some quick notes:
-The plugin will run if you copy all the files to your pc right now, but some thing are broken; the actual display of noted messages (accessible through a notebook icon button at the top of discord (same location as the multitask plugin)) is almost completly broken. Saving notes is fully functional, as well as all injections (I think). There is one (maybe two) missing injection(s), if you click the three dots on a message it shows a drop down with more options. I would've also added the note button to this menu (optional: add it to the message buttons as well but only when you shift click (like the new discord quick delete messages)) Currently, the way to save a note is to right click a message and click "Note Message", the message will then be saved to a 'notes.json' file located in the 'NotesHandler' folder.
 
-I am also giving anyone full permission to do anything they want with this code, as well as strip any mentions of my name from it.
+Since Swishilicous will not be working on this plugin anymore, I decided to work on it as a hobby and personal project because this would be the last plugin I still need to replace on my old BD plugin list. I want to stop using BDCompat.
 
-Oh, and to anyone who wants to maintain it, you should check with Kyza first as he's the one who wrote the Settings/NotesHandler for this plugin (originally in message translate)
+The actual display of noted messages (accessible through a notebook icon button at the top bar of discord) doesn't work like the original plugin from BD, and I have no idea how to fix it properly. I patched Swishlicious original implementation so that the messages wouldn't overlap.
+
+
+Saving and deleting notes is fully functional. Currently, the only way to save a note is to right click a message and click "Note Message", the message will then be saved to a 'notes.json' file located in the 'NotesHandler' folder.
+
+Added 3 commands:
+ - .ListNotes, lists all note's IDs in your notebook, followed by a 10 word preview.
+ - .GetNote {ID}, displays note as a text (will implement the embed later) given it's ID.
+ - .DeleteNote {ID}, deletes note from your notebook given it's ID.
+ 
+There is one missing injection, if you click the three dots on a message it shows a drop down with more options. I will try to add the note button to this menu too.
