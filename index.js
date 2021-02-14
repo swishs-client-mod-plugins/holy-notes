@@ -4,11 +4,12 @@ const { inject, uninject } = require('powercord/injector')
 const { React, getModule, getModuleByDisplayName} = require('powercord/webpack')
 const { open: openModal } = require('powercord/modal')
 const { findInReactTree } = require('powercord/util')
+const { getMessage } = getModule(['getMessages'], false)
 const NotesHandler = new (require('./NotesHandler'))()
 
 /* TODO:
-Inject into not only messagecontext but the 3 dot message menu as well
-Create embed for the messages
+Inject into the 3 dot message menu
+Inject message component into embed
 */
 
 const NotebookButton = require('./components/NotebookButton')
@@ -20,71 +21,173 @@ module.exports = class Notebook extends Plugin {
     this._injectContextMenu()
 
     powercord.api.commands.registerCommand({
-        command: 'ListNotes',
-        description: 'Show List of Note\'s message ID and 10 word preview',
-        usage: '{c}',
-        executor: () => {
-            let notes = NotesHandler.getNotes()
-        	console.log(notes)
-            console.log(Object.keys(notes).length)
-            if(!Object.keys(notes).length) return {
-                send: false,
-                result: '```\nThere are no notes in your Notebook.\n```'
+        command: 'notebook',
+        description: 'Add, Get, Delete and List notes',
+        usage: '{c} [ args ]',
+        executor: (args) => {
+            let IDArray
+            if(args[1]) IDArray = args[1].split("/")
+            let n = Number(args[1])
+            let result
+            let notes
+            let note
+            switch(args[0]){               
+                case 'write':
+                    if(!args[1]) return {
+                        send: false,
+                        result: 'Please input a valid link'
+                    }
+                    this.saveMessageFromLink(args[1])
+                    return {
+                        send: false,
+                        result: 'Note **'+IDArray[IDArray.length-1].toString()+'** added'
+                    }
+                    break
+                case 'erase':
+                    let messageID
+                    notes = NotesHandler.getNotes()
+                    if(n.isNaN)return {
+                        send: false,
+                        result: 'Please input a number or vald ID'
+                    }
+                    note = notes[Object.keys(notes)[n-1]]
+                    //console.log(note)
+                    messageID = note['Message_ID'] 
+                    if(messageID===undefined)return {
+                        send: false,
+                        result: '```\nNot a note.\n```'
+                    }
+                    if(args[2]!=='please'){
+                        result = {
+                            type: "rich",
+                            author: {
+                                iconURL: note['Avatar_URL'].replace("png","webm"),
+                                name: note['Username'],
+                            },
+                            footer: {
+                                text: note['Timestamp'].replace("T"," ").replace("Z","")
+                            },
+                            description: note['Content']
+                        }
+                        if(note['Attachment']) {
+                            result['image'] = {
+                                url: note['Attachment'],
+                                height: note['Height'],
+                                width: note['Width']
+                            }
+                        }
+                        result['footer'] = {
+                                text: 'If you really want to erase permanently the note '+n.toString()+', as seen above, add "please" at the end of the command. '
+                            },
+                        //console.log(result)
+                        return {
+                            send: false,
+                            result
+                        }
+                    }
+                    NotesHandler.deleteNote(messageID)
+                    return {
+                        send: false,
+                        result: 'Note **'+n.toString()+'** deleted'
+                    }
+                    break
+                case 'open':
+                    if(!n) n = 1
+                    notes = NotesHandler.getNotes()
+                    if(!Object.keys(notes).length) return {
+                        send: false,
+                        result: '```\nThere are no notes in your Notebook.\n```'
+                    }
+                    let end
+                    if(Math.floor(Object.keys(notes).length/10) < n || args[1]==='last'){
+                        n = Math.floor(Object.keys(notes).length/10)+1
+                        end = Object.keys(notes).length
+                    }
+                    else end = 10*n
+                    let out = ''
+	                for(let i =10*(n-1); i<end; i++) {	        
+                        let note = Object.keys(notes)[i]
+                        //console.log(note)
+                        let noteID = i+1
+                        let noteUser = notes[note]["Username"]         
+                        out+= '**Note '+noteID.toString()+"** by *"+ noteUser+"*:\n```"
+                        let contentwords = notes[note]["Content"].split(" ")
+                        for(let i = 0; i<contentwords.length && i<10; i++) out+=" "+contentwords[i]
+                        if(contentwords.length>10) out+= "..."
+                        out+='\n```'
+                    }
+                    result = {
+                        type: 'rich',
+                        title: 'Notebook (page '+ n.toString() +')\nNotes '+ (10*(n-1)+1).toString() +" to "+ end.toString() +':',
+                        description: out
+                    };     
+                    return {
+                        send: false,
+                        result
+                    }
+                    break
+                case 'read':
+                    if(n.isNaN)return {
+                        send: false,
+                        result: '`Not a note.`'
+                    }
+                    notes = NotesHandler.getNotes()
+                    note = notes[Object.keys(notes)[n-1]]
+                    if(note===undefined)return {
+                        send: false,
+                        result: '```\nNot a note.\n```'
+                    }
+                    result = {
+                        type: "rich",
+                        author: {
+                            iconURL: note['Avatar_URL'].replace("png","webm"),
+                            name: note['Username'],
+                        },
+                        footer: {
+                            text: note['Timestamp'].replace("T"," ").replace("Z","")
+                        },
+                        description: note['Content']
+                    }
+                    if(note['Attachment']) {
+                        result['image'] = {
+                            url: note['Attachment'],
+                            height: note['Height'],
+                            width: note['Width']
+                        }
+                    }
+                    return {
+                        send: false,
+                        result
+                    }
+                    break
             }
-            let out = '**List of notes:**\n\n'
-	        for(let i = 0; i < Object.keys(notes).length; i++) {
-		        let note = Object.keys(notes)[i]
-                let noteID = notes[note]["Message_ID"]
-                let noteUser = notes[note]["Username"]         
-                out+= '*'+noteID+"* by **"+ noteUser+"**:\n```"
-                let contentwords = notes[note]["Content"].split(" ")
-                for(let i = 0; i<contentwords.length && i<10; i++) out+=" "+contentwords[i]
-                if(contentwords.length>10) out+="..."
-                out+='\n```\n'
-            }         
-            return {
-            send: false,
-            result: out
+        },
+        autocomplete: (args) => {
+			if (args.length !== 1) {
+				return false;
+			}
+            let options = {
+                read: 'Shows Note as embed given it\'s number',
+                open: 'Opens the Nth Page of Notebook, with 10 notes/page.',
+                write: 'Writes Note given it\'s message link',
+                erase: 'Erases Note from your Notebook given it\'s number. As a safe measuere, type \'confirm\' after it.'
             }
-            
-        }
-
-    })
-    powercord.api.commands.registerCommand({
-        command: 'GetNote',
-        description: 'Show Note given it\'s message ID',
-        usage: '{c} [ID]',
-        executor: (ID) => {
-            let note = NotesHandler.getNote(ID)
-            if(!note)return {
-                send: false,
-                result: '```\nNot a note.\n```'
-            }
-            return {
-                send: false,
-                result: '```\n'+note['Content']+'\n```'
-            }
-        }
-    })
-    powercord.api.commands.registerCommand({
-        command: 'DeleteNote',
-        description: 'Deletes Note given it\'s message ID',
-        usage: '{c} [ID]',
-        executor: (ID) => {
-            NotesHandler.deleteNote(ID)
-            return {
-                send: false,
-                result: 'Note **'+ID+'** deleted'
-            }
-        }
-    })
+			return {
+				commands: Object.keys(options)
+					.filter((option) => option.includes(args[0].toLowerCase()))
+					.map((option) => ({
+						command: option,
+						description: options[option],
+					})),
+				header: 'Notebook commands',
+			};
+		}
+    }) 
   }
   pluginWillUnload () {
-    uninject('note-button')
-    uninject('note-context-menu')
-    powercord.api.commands.unregisterCommand('GetNote')
-    powercord.api.commands.unregisterCommand('ListNotes')
-    powercord.api.commands.unregisterCommand('DeleteNote')
+    uninject('note-button-dev')
+    uninject('note-context-menu-dev')
+    powercord.api.commands.unregisterCommand('Notebook')
   }
 
   async _injectHeaderBarContainer () {
@@ -138,7 +241,34 @@ module.exports = class Notebook extends Plugin {
       'Message_URL' : `https://discord.com/channels/${args[0].channel.guild_id}/${args[0].channel.id}/${args[0].message.id}`,
       'Avatar_URL' : `https://cdn.discordapp.com/avatars/${args[0].message.author.id}/${args[0].message.author.avatar}.png`
     }
-    if (attachments) noteFormat['Attachment'] = attachments.url
+    if (attachments) {
+        noteFormat['Attachment'] = attachments.url
+        noteFormat['Height'] = attachments.height
+        noteFormat['Width'] = attachments.width
+    }
+    NotesHandler.setNote(noteFormat)
+  }
+  //The obvious modifying saveMessage() broke in a weird way, and i don't have time to make this in a prettier way, so...
+  saveMessageFromLink(args) {
+    let linkArray = args.split("/")         
+    let message= getMessage(linkArray[linkArray.length-2],linkArray[linkArray.length-1])
+    //console.log(message)   
+    let attached = message.attachments[0]
+    let noteFormat = {
+      'Message_ID' : message.id,
+      'Username' : message.author.username,
+      'User_ID' : message.author.id,
+      'Content' : message.content,
+      'Timestamp' : message.timestamp,
+      'Editstamp' : message.editedTimestamp,
+      'Message_URL' : args,
+      'Avatar_URL' : `https://cdn.discordapp.com/avatars/${message.author.id}/${message.author.avatar}.png`
+    }
+    if (attached) {
+        noteFormat['Attachment'] = attached.url
+        noteFormat['Height'] = attached.height
+        noteFormat['Width'] = attached.width
+    }
     NotesHandler.setNote(noteFormat)
   }
 }
