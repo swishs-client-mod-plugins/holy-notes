@@ -40,9 +40,6 @@ class noteDisplay extends React.PureComponent {
         for(let j=0; j<(note['Content'].length/100+1);j++){
         	noteArray.push(<br/>)
         }
-        noteArray.push(<Text selectable={true} style={{'padding-left': '50px', 'position': 'absolute'}}>(message {note['Message_ID']})</Text>)
-    	noteArray.push(<br/>)
-	}
     
 	return(	
 	  <Modal className='Notebook' size={Modal.Sizes.LARGE}>
