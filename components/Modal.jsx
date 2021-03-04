@@ -261,16 +261,11 @@ class NoteDisplay extends React.PureComponent {
 				<Flex className={`notebook-flex`} direction={Flex.Direction.VERTICAL} style={{ width: '100%' }}>
 					<div className={this.classes.topSectionNormal}>
 						<Modal.Header className={this.classes.header}>
-							<FormTitle
-								tag='h4' style={{
-									paddingBottom: '6px',
-									maxWidth: '95px',
-									transform: 'scale(0.85)'
-								}}>NOTEBOOK
+							<FormTitle tag='h4' className='notebook-header'>
+								NOTEBOOK
 							</FormTitle>
 							<Icon
-								className='help-icon'
-								name='HelpCircle' className='close-hZ94c6'
+								className='help-icon' name='HelpCircle'
 								onClick={() => openModal(() => <HelpModal/>)}/>
 							<SearchBar
 								className={'notebook-search'}
@@ -288,8 +283,6 @@ class NoteDisplay extends React.PureComponent {
 								query={this.state.searchInput}/>
 							<Modal.CloseButton onClick={closeModal}/>
 						</Modal.Header>
-					</div>
-					<div className={this.classes.topSectionNormal}>
 						<div className={this.classes.tabBarContainer}>
 							<TabBar
 								className={this.classes.tabBar}

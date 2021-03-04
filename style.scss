@@ -14,17 +14,28 @@
       padding-bottom: 0px;
       padding-left: 10px;
       padding-top: 15px;
-    } 
+    }
+  }
+  &-header {
+    padding-bottom: 6px;
+    margin-right: 0px;
+    max-width: 95px;
+    transform: scale(0.85);
   }
 }
 
-.close-hZ94c6.vz-icon-wrapper {
-  margin-bottom: 6px;
-  margin-left: 0px;
-  padding-left: 0px;
-  margin-right: 7px;
+.notebook-flex .vz-icon-wrapper {
   width: 17px;
+  padding-left: 0px;
+  margin: 0px 14px 6px 0px;
+  transition: opacity .2s ease-in-out;
+  opacity: .5;
+  cursor: pointer;
+  color: var(--interactive-normal);
+  &:hover { opacity: 1; }
 }
+
+
 
 .help-modal > .content-1LAB8Z > .fade-2kXiP2 > .vz-markdown {
   &-p { color: var(--text-normal); }
