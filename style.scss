@@ -1,14 +1,21 @@
-.notebook-flex .header-QKLPzZ {
-  box-shadow: 0 1px 0 0 var(--background-tertiary), 0 1px 2px 0 var(--background-tertiary);
-  // The purpose of this spagetti is to get rid of the tiny border in between the notebook selector and the modal header,
-  // Yes, I am aware that this is an awfully horrid way of doing things, if you would like to suggest a better way of doing this please do.
-  padding-bottom: 0px;
-  padding-left: 10px;
-  padding-top: 15px;
-}
-
-.notebook-flex {
-  overflow: hidden;
+.notebook {
+  &-search {
+    flex: auto;
+    margin-right: 15px;
+    margin-bottom: 6px;
+    background-color: var(--background-primary);
+  }
+  &-flex {
+    overflow: hidden;
+    .header-QKLPzZ {
+      box-shadow: 0 1px 0 0 var(--background-tertiary), 0 1px 2px 0 var(--background-tertiary);
+      // The purpose of this spagetti is to get rid of the tiny border in between the notebook selector and the modal header,
+      // Yes, I am aware that this is an awfully horrid way of doing things, if you would like to suggest a better way of doing this please do.
+      padding-bottom: 0px;
+      padding-left: 10px;
+      padding-top: 15px;
+    } 
+  }
 }
 
 .close-hZ94c6.vz-icon-wrapper {
@@ -19,41 +26,32 @@
   width: 17px;
 }
 
-.help-modal > .content-1LAB8Z > .fade-2kXiP2 > .vz-markdown-p {
-  color: var(--text-normal);
+.help-modal > .content-1LAB8Z > .fade-2kXiP2 > .vz-markdown {
+  &-p { color: var(--text-normal); }
+  &-header-h4 { 
+    margin-top: 0px;
+    margin-bottom: 10px; 
+  }
+  &-hr {
+    margin: 12px 0px 16px 0px;
+    height: 1px;
+  }
 }
 
-.help-modal > .content-1LAB8Z > .fade-2kXiP2 > .vz-markdown-header-h4 {
-  margin-top: 0px;
-  margin-bottom: 10px;
-}
-
-.help-modal > .content-1LAB8Z > .fade-2kXiP2 > .vz-markdown-hr {
-  margin: 12px 0px 16px 0px;
-  height: 1px;
-}
-
-.sort-button-container {
-  display: flex;
-  flex: auto;
-}
-
-.sort-button-icon {
-  min-width: 25px;
-  border-radius: 0px 3px 3px 0px;
-  padding: 0px 5px 0px 2px;
-}
-
-.sort-button-text {
-  padding-right: 3px;
-  padding-left: 12px;
-  border-radius: 3px 0px 0px 3px;
-  padding-bottom: 4px;
-}
-
-.notebook-search {
-  flex: auto;
-  margin-right: 15px;
-  margin-bottom: 6px;
-  background-color: var(--background-primary);
+.sort-button {
+  &-container {
+    display: flex;
+    flex: auto;
+  }
+  &-icon {
+    min-width: 25px;
+    border-radius: 0px 3px 3px 0px;
+    padding: 0px 5px 0px 2px;
+  }
+  &-text {
+    padding-right: 3px;
+    padding-left: 12px;
+    border-radius: 3px 0px 0px 3px;
+    padding-bottom: 4px;
+  }
 }
