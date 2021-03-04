@@ -2,7 +2,7 @@ import React from 'react'
 
 import { getModule, contextMenu, getModules } from '@vizality/webpack'
 import { TabBar, AdvancedScrollerThin, Button, Tooltip } from '@vizality/components'
-import { FormTitle, Flex, Modal, ContextMenu, Icon } from '@vizality/components'
+import { FormTitle, Flex, Modal, ContextMenu, Icon, ErrorBoundary } from '@vizality/components'
 import { close as closeModal, open as openModal } from '@vizality/modal'
 import { clipboard } from 'electron'
 
@@ -304,13 +304,15 @@ class NoteDisplay extends React.PureComponent {
 					</div>
 					<Modal.Content>
 						<AdvancedScrollerThin fade={true}>
-							<NotebookRender
-								notes={notes}
-								notebook={currentNotebook}
-								updateParent={() => this.forceUpdate()}
-								sortDirection={this.state.currentSortDirection}
-								sortType={this.state.currentSortType}
-								searchInput={this.state.searchInput}/>
+							<ErrorBoundary>
+								<NotebookRender
+									notes={notes}
+									notebook={currentNotebook}
+									updateParent={() => this.forceUpdate()}
+									sortDirection={this.state.currentSortDirection}
+									sortType={this.state.currentSortType}
+									searchInput={this.state.searchInput}/>
+							</ErrorBoundary>
 						</AdvancedScrollerThin>
 					</Modal.Content>
 				</Flex>
