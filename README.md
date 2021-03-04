@@ -21,4 +21,5 @@ Or run this command in the Vizality Client:
 
 ### Credits
 icon made by [@WinstonSepruko](https://github.com/WinstonSepruko)
+
 settings handler base from [@Kyza](https://github.com/Kyza)
