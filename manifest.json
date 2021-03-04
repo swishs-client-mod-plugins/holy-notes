@@ -1,7 +1,7 @@
 {
-    "name": "Holy Notes (rip funni names)",
-    "description": "Allows you to note messages.",
+    "name": "Holy Notes",
+    "description": "Adds message noting functionality to Discord.",
     "version": "1.0.0",
-    "author": "Swishilicous",
-    "license": "Unlicensed"
+    "author": "Swishilicous#3200",
+    "license": "MIT"
 }
