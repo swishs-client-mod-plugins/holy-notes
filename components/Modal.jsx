@@ -59,24 +59,24 @@ const NotebookRender = ({ notes, notebook, updateParent, sortDirection, sortType
 		return ( <NoResultsMessage error={false}/> )
 	} else {
 		let MessageArray
-		sortType ? 
+		sortType ?
 			MessageArray = Object.keys(notes).map(note =>
-				<RenderMessage 
-					note={notes[note]} 
+				<RenderMessage
+					note={notes[note]}
 					notebook={notebook}
 					updateParent={updateParent}/>
 			) :
 			MessageArray = Object.keys(notes).map(note =>
-				<RenderMessage 
-					note={notes[note]} 
+				<RenderMessage
+					note={notes[note]}
 					notebook={notebook}
 					updateParent={updateParent}/>
 			).sort((a, b) => new Date(b.props.note.timestamp) - new Date(a.props.note.timestamp))
 		if (!sortDirection) MessageArray.reverse()
-		
+
 		/* Search Filter */
 		if (searchInput && searchInput !== '')
-			MessageArray = MessageArray.filter(m => 
+			MessageArray = MessageArray.filter(m =>
 				m.props.note.content.toLowerCase()
 					.indexOf(searchInput.trim()) > -1)
 		return (MessageArray)
@@ -101,11 +101,15 @@ class RenderMessage extends React.PureComponent {
 		messageNote.timestamp = {
 			'toDate' : () => new Date(note.timestamp),
 			'locale' : () => 'en' }
+		if (messageNote?.embeds[0]?.timestamp)
+		messageNote.embeds[0].timestamp = {
+			'toDate' : () => new Date(note.timestamp),
+			'locale' : () => 'en' }
 		return (
 			<div className='holy-note'>
-				<ChannelMessage 
+				<ChannelMessage
 					style={{
-						marginBottom: '5px', 
+						marginBottom: '5px',
 						marginTop: '5px',
 						paddingTop: '5px',
 						paddingBottom: '5px'}}
@@ -122,8 +126,8 @@ class RenderMessage extends React.PureComponent {
 							updateParent()
 						}
 					}}
-					onContextMenu={event => 
-						contextMenu.openContextMenu(event, () => 
+					onContextMenu={event =>
+						contextMenu.openContextMenu(event, () =>
 							<ContextMenu.Menu onClose={contextMenu.closeContextMenu}>
 									<ContextMenu.Item
 										label='Jump to Message' id='jump'
@@ -144,13 +148,13 @@ class RenderMessage extends React.PureComponent {
 											updateParent()
 										}}
 									/>
-									{Object.keys(NotesHandler.getNotes()).length !== 1 ? 
+									{Object.keys(NotesHandler.getNotes()).length !== 1 ?
 										<ContextMenu.Item
 											label='Move Note' id='move'>
 											{Object.keys(NotesHandler.getNotes()).map(key => {
 												if (key != notebook) {
 													return (
-														<ContextMenu.Item 
+														<ContextMenu.Item
 															label={`Move to ${key}`} id={key}
 															action={() => {
 																NotesHandler.moveNote(note, key, notebook)
@@ -231,7 +235,7 @@ class NoteDisplay extends React.PureComponent {
 		this.classes = {
       ...getModule('tabBarContainer')
     }
-		
+
 		this.handleNotebookSwitch = this.handleNotebookSwitch.bind(this)
 
 		this.state = {
@@ -257,11 +261,11 @@ class NoteDisplay extends React.PureComponent {
 				<Flex className={`notebook-flex`} direction={Flex.Direction.VERTICAL} style={{ width: '100%' }}>
 					<div className={this.classes.topSectionNormal}>
 						<Modal.Header className={this.classes.header}>
-							<FormTitle 
-								tag='h4' style={{ 
-									paddingBottom: '6px', 
-									maxWidth: '95px', 
-									transform: 'scale(0.85)' 
+							<FormTitle
+								tag='h4' style={{
+									paddingBottom: '6px',
+									maxWidth: '95px',
+									transform: 'scale(0.85)'
 								}}>NOTEBOOK
 							</FormTitle>
 							<Icon
@@ -300,9 +304,9 @@ class NoteDisplay extends React.PureComponent {
 					</div>
 					<Modal.Content>
 						<AdvancedScrollerThin fade={true}>
-							<NotebookRender 
-								notes={notes} 
-								notebook={currentNotebook} 
+							<NotebookRender
+								notes={notes}
+								notebook={currentNotebook}
 								updateParent={() => this.forceUpdate()}
 								sortDirection={this.state.currentSortDirection}
 								sortType={this.state.currentSortType}
@@ -336,7 +340,7 @@ class NoteDisplay extends React.PureComponent {
 								this.state.currentSortDirection = !this.state.currentSortDirection
 								this.forceUpdate()
 							}}>
-							{this.state.currentSortDirection 
+							{this.state.currentSortDirection
 								? <Tooltip text='New to Old' position='top'>
 										<Icon name='ArrowDropDown'/>
 									</Tooltip>
