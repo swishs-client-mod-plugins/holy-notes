@@ -8,15 +8,18 @@ import { Tooltip } from '@vizality/components'
 import { joinClassNames } from '@vizality/util/dom'
 import { open as openModal } from '@vizality/modal'
 
-import NotebookButton from './components/NotebookButton'
-import Modal from './components/Modal'
+import NotebookButton from './components/icons/NotebookButton'
+import NotebookModal from './components/modals/Notebook'
 
 const NotesHandler = new (require('./NotesHandler'))()
 export default class Notebook extends Plugin {
   async start() {
+    // Styles
+    this.injectStyles('style.scss')
+
+    // Patches
     this._patchHeaderBarContainer()
     this._patchContextMenu()
-    this.injectStyles('style.scss')
   }
 
   stop() {
@@ -33,7 +36,7 @@ export default class Notebook extends Plugin {
           <div className={joinClassNames('note-button', classes.iconWrapper, classes.clickable)}>
             <NotebookButton
               className={joinClassNames('note-button', classes.icon)}
-              onClick={() => openModal(() => <Modal/>)}
+              onClick={() => openModal(() => <NotebookModal/>)}
             />
           </div>
         </Tooltip>)

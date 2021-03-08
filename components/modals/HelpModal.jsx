@@ -1,10 +1,10 @@
-import React, { memo } from 'react'
+import React from 'react'
 
 import { Markdown } from '@vizality/components'
 import { FormTitle, Modal, AdvancedScrollerThin, Button } from '@vizality/components'
 import { close as closeModal, open as openModal } from '@vizality/modal'
 
-import BDModal from './ImportModal'
+import BDModal from './BDImport'
 
 const markdown =`
 #### Adding Notes
@@ -24,7 +24,7 @@ To move a note right click on a note and hover over the "Move Note" item and cli
 #### Jump to Message
 To jump to the location that the note was originally located at just right click on the note and hit "Jump to Message".`
 
-export default memo(() => {
+export default () => {
   return (
     <Modal className='help-modal' size={Modal.Sizes.MEDIUM}>
       <Modal.Header>
@@ -50,4 +50,4 @@ export default memo(() => {
       </Modal.Footer>
     </Modal>
   )
-})
+}
