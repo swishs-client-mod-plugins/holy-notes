@@ -2,6 +2,14 @@
     "name": "Holy Notes",
     "description": "Adds message noting functionality to Discord.",
     "version": "1.1.0",
-    "author": "Swishilicous#3200",
-    "license": "MIT"
+    "author": {
+        "name" : "Swishilicous#3200",
+        "id" : "474322346937810955"
+    },
+    "license": "MIT",
+    "hotReload": {
+        "ignore": [ 
+            "NotesHandler/notes.json"
+        ]
+    }
 }
