@@ -70,6 +70,46 @@ class NotesHandler {
 		fs.writeFileSync(notesPath, JSON.stringify(notes, null, '\t'))
 	}
 
+	spoilerNote = (_note, notebook ) => {
+		this.initNotes()
+		let notes
+		try { notes = this.getNotes() } 
+		catch { return }
+
+		let note = notes[notebook][_note]
+
+		if (note.content !== '')
+			note.content = `||${note.content}||`
+		if (JSON.stringify(note.attachments) !== '[]') {
+			for (let k in note.attachments) {
+				note.attachments[k].spoiler = true
+			}
+		}
+		
+		Object.assign(notes[notebook], { [note.id] : note })
+		fs.writeFileSync(notesPath, JSON.stringify(notes, null, '\t'))
+	}
+
+	unspoilerNote = (_note, notebook ) => {
+		this.initNotes()
+		let notes
+		try { notes = this.getNotes() } 
+		catch { return }
+
+		let note = notes[notebook][_note]
+
+		if (note.content !== '' && note.content.indexOf('||') === 0)
+			note.content = note.content.slice(2, -2)
+		if (JSON.stringify(note.attachments) !== '[]') {
+			for (let k in note.attachments) {
+				note.attachments[k].spoiler = false
+			}
+		}
+		
+		Object.assign(notes[notebook], { [note.id] : note })
+		fs.writeFileSync(notesPath, JSON.stringify(notes, null, '\t'))
+	}
+
 	newNotebook = (name) => {
 		this.initNotes()
 		let notes
@@ -90,19 +130,20 @@ class NotesHandler {
 		fs.writeFileSync(notesPath, JSON.stringify(notes, null, '\t'))
 	}
 
-	parseBDNotes = (data) => {
+	parseBDNotes = (data, notebook) => {
 		this.initNotes()
 		let notes
 		try { notes = this.getNotes() }
 		catch { return }
-		Object.assign(notes, { 'PersonalPins' : {} })
+		if (!Object.keys(notes).includes(notebook))
+			Object.assign(notes, { [notebook] : {} })
 		let BDNotes = JSON.parse(data).notes
 
 		for (let guildID in BDNotes) {
 			for (let channelID in BDNotes[guildID]) {
 				for (let messageID in BDNotes[guildID][channelID]) {
 					let note = JSON.parse(BDNotes[guildID][channelID][messageID].message)
-					Object.assign(notes.PersonalPins, {
+					Object.assign(notes[notebook], {
 						[note.id] : {
 							id : note.id,
 							channel_id : channelID,

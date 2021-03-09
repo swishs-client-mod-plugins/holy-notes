@@ -97,6 +97,19 @@ const NoteContextMenu = ({ note, notebook, updateParent, closeModal }) => {
         label='Copy Text' id='ctext'
         action={() => clipboard.writeText(note.content)}
       />
+      {(note.content !== '' && note.content.indexOf('||') !== 0) || note.attachments[0]?.spoiler === false
+        ? <ContextMenu.Item
+        label='Mark as Spoiler' id='spoiler'
+        action={() => {
+          NotesHandler.spoilerNote(note.id, notebook)
+          updateParent()
+        }}/> 
+        : <ContextMenu.Item
+        label='Unmark as Spoiler' id='unspoiler'
+        action={() => {
+          NotesHandler.unspoilerNote(note.id, notebook)
+          updateParent()
+      }}/>}
       <ContextMenu.Item
         color='colorDanger'
         label='Delete Note' id='delete'
