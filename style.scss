@@ -24,7 +24,7 @@
   }
 }
 
-.notebook-flex .vz-icon-wrapper {
+.notebook-flex .help-icon {
   width: 17px;
   padding-left: 0px;
   margin: 0px 14px 6px 0px;
@@ -36,16 +36,23 @@
 }
 
 
-
-.help-modal > .content-1LAB8Z > .fade-2kXiP2 > .vz-markdown {
-  &-p { color: var(--text-normal); }
-  &-header-h4 { 
-    margin-top: 0px;
-    margin-bottom: 10px; 
+.help-markdown {
+  color: var(--text-normal);
+  p {
+    line-height: 1.5;
+    margin: 0 0 16px;
   }
-  &-hr {
+  h4 {
+    margin-bottom: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.25;
+  }
+  hr {
     margin: 12px 0px 16px 0px;
-    height: 1px;
+    background-color: var(--background-modifier-accent);
+    height: 2px;
+    border: 0;
   }
 }
 

@@ -1,20 +1,20 @@
-import React, { useState } from 'react'
+const { TabBar, AdvancedScrollerThin, Button } = require('powercord/components')
+const { FormTitle, Flex, Icon, Tooltip } = require('powercord/components')
+const { close: closeModal, open: openModal } = require('powercord/modal')
+const { React, getModule, getAllModules } = require('powercord/webpack')
+const { Modal } = require('powercord/components/modal')
+const { useState } = React
 
-import { getModule } from '@vizality/webpack'
-import { TabBar, AdvancedScrollerThin, Button, Tooltip, SearchBar } from '@vizality/components'
-import { FormTitle, Flex, Modal, Icon, ErrorBoundary } from '@vizality/components'
-import { close as closeModal, open as openModal } from '@vizality/modal'
-import { useForceUpdate } from '@vizality/hooks'
-
-import NoResultsMessage from '../sections/NoResultsMessage'
-import RenderMessage from '../sections/RenderMessage'
-import NotebookManagementButton from '../sections/NotebookManagementButton'
-import HelpModal from './HelpModal'
+const NoResultsMessage = require('../sections/NoResultsMessage')
+const RenderMessage = require('../sections/RenderMessage')
+const NotebookManagementButton = require('../sections/NotebookManagementButton')
+const HelpModal = require('./HelpModal')
 
 const NotesHandler = new (require('../../NotesHandler'))()
+const SearchBar = getAllModules(m => Object.values(m).includes('SearchBar'))[1]
 
 const classes = {
-	...getModule('tabBarContainer')
+	...getModule(['tabBarContainer'], false)
 }
 
 const NotebookRender = ({ notes, notebook, updateParent, sortDirection, sortType, searchInput }) => {
@@ -50,12 +50,13 @@ const NotebookRender = ({ notes, notebook, updateParent, sortDirection, sortType
 	}
 }
 
-export default () => {
+module.exports = () => {
 	const [CurrentNotebook, setCurrentNotebook] = useState('Main')
 	const [SearchInput, setSearchInput] = useState('')
 	const [SortDirection, setSortDirection] = useState(false)
 	const [SortType, setSortType] = useState(false)
-	const forceUpdate = useForceUpdate()
+	// since hooks don't have a native forceUpdate() function this is the easisest workaround
+	const forceUpdate = useState(0)[1]
 	const notes = NotesHandler.getNotes()[CurrentNotebook]
 	return (
 		<Modal className='notebook' size={Modal.Sizes.LARGE} style={{ borderRadius: '8px' }}>
@@ -73,7 +74,7 @@ export default () => {
 							size={SearchBar.Sizes.MEDIUM}
 							autofocus={false}
 							placeholder='Search'
-							onChange={query => setSearchInput(query)}
+							onQueryChange={query => setSearchInput(query)}
        				onClear={() => setSearchInput('')}
 							query={SearchInput}/>
 						<Modal.CloseButton onClick={closeModal}/>
@@ -92,15 +93,13 @@ export default () => {
 				</div>
 				<Modal.Content>
 					<AdvancedScrollerThin fade={true}>
-						<ErrorBoundary>
-							<NotebookRender
-								notes={notes}
-								notebook={CurrentNotebook}
-								updateParent={() => forceUpdate()}
-								sortDirection={SortDirection}
-								sortType={SortType}
-								searchInput={SearchInput}/>
-						</ErrorBoundary>
+						<NotebookRender
+							notes={notes}
+							notebook={CurrentNotebook}
+							updateParent={() => forceUpdate(u => ~u)}
+							sortDirection={SortDirection}
+							sortType={SortType}
+							searchInput={SearchInput}/>
 					</AdvancedScrollerThin>
 				</Modal.Content>
 			</Flex>

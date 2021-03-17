@@ -1,12 +1,10 @@
-import React from 'react'
-
-import { getModule } from '@vizality/webpack'
+const { React, getModule } = require('powercord/webpack')
 
 const classes = {
-  ...getModule('emptyResultsWrap')
+  ...getModule(['emptyResultsWrap'], false)
 }
 
-export default ({ error }) => {
+module.exports = ({ error }) => {
 	if (error) console.log(error)
 	if (error) { // not functional yet
 		return (

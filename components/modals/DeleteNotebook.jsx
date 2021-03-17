@@ -1,15 +1,14 @@
-import React from 'react'
+const { FormTitle, Button } = require('powercord/components')
+const { Modal } = require('powercord/components/modal')
+const { AdvancedScrollerThin } = require('powercord/components')
+const { close: closeModal } = require('powercord/modal')
+const { React } = require('powercord/webpack')
 
-import { FormTitle, Modal, AdvancedScrollerThin, Button } from '@vizality/components'
-import { close as closeModal } from '@vizality/modal'
-import NoResultsMessage from '../sections/NoResultsMessage'
-
-import NoResultsMessage from '../sections/NoResultsMessage'
-import RenderMessage from '../sections/RenderMessage'
-
+const NoResultsMessage = require('../sections/NoResultsMessage')
+const RenderMessage = require('../sections/RenderMessage')
 const NotesHandler = new (require('../../NotesHandler'))()
 
-export default ({ notebook }) => {
+module.exports = ({ notebook }) => {
 	const notes = NotesHandler.getNotes()[notebook]
 	return (
 		<Modal className='delete-notebook' size={Modal.Sizes.LARGE}>

@@ -1,36 +1,35 @@
-import React, { useState } from 'react'
-
-import { FormTitle, Modal, Button } from '@vizality/components'
-import { AdvancedScrollerThin } from '@vizality/components'
-import { TextArea, TextInput } from '@vizality/components/settings'
-import { close as closeModal } from '@vizality/modal'
+const { FormTitle, AdvancedScrollerThin, Button } = require('powercord/components')
+const { Modal } = require('powercord/components/modal')
+const { close: closeModal } = require('powercord/modal')
+const { React } = require('powercord/webpack')
+const { TextAreaInput, TextInput } = require('powercord/components/settings')
+const { useState } = React
 
 const NotesHandler = new (require('../../NotesHandler'))()
-export default () => {
+module.exports = () => {
   const [PersonalPinsData, setPersonalPinsData] = useState('')
-  const [Notebook, setNotebook] = useState('')
-  return(
-    <Modal className='bd-import-modal' size={Modal.Sizes.LARGE}>
+  const [Notebook, setNotebook] = useState('PersonalPins')
+  return (
+    <Modal className='bd-const-modal' size={Modal.Sizes.LARGE}>
       <Modal.Header>
         <FormTitle tag='h3'>Import from PersonalPins</FormTitle>
         <Modal.CloseButton onClick={closeModal}/>
       </Modal.Header>
       <Modal.Content>
         <AdvancedScrollerThin fade={true}>
-          <TextArea
+          <TextAreaInput
             autofocus={true}
             autosize={true}
-            onChange={value => setPersonalPinsData(value)}
+            onChange={val => setPersonalPinsData(val)}
             placeholder={`{\n  "choices": {\n  "defaultFilter": "channel",\n  "defaultOrder": "ascending",\n  "defaultSort": "notetime"\n  },\n  "notes": {`}
             resizeable={false}
             rows={7}
             value={PersonalPinsData}>
             Input the text from your "PersonalPins.config.json" file located in your BD Plugins folder.
-          </TextArea>
+          </TextAreaInput>
           <TextInput
             note='You can add the notes to pre-existing notebooks!'
             defaultValue={'PersonalPins'}
-            required={false}
             onChange={value => setNotebook(value)}>
             Add to Notebook
           </TextInput>

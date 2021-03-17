@@ -1,12 +1,11 @@
-import React from 'react'
+const { Button } = require('powercord/components')
+const { open: openModal } = require('powercord/modal')
+const { React } = require('powercord/webpack')
 
-import { Button } from '@vizality/components'
-import { open as openModal } from '@vizality/modal'
+const DeleteNotebook = require('../modals/DeleteNotebook')
+const CreateNotebook = require('../modals/CreateNotebook')
 
-import DeleteNotebook from '../modals/DeleteNotebook'
-import CreateNotebook from '../modals/CreateNotebook'
-
-export default ({ notebook }) => {
+module.exports = ({ notebook }) => {
 	if (notebook != 'Main') {
 		return <>
 			<Button

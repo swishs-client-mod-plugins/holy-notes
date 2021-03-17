@@ -1,11 +1,12 @@
-import React, { useState } from 'react'
-
-import { FormTitle, Modal, Button } from '@vizality/components'
-import { TextInput } from '@vizality/components/settings'
-import { close as closeModal } from '@vizality/modal'
+const { FormTitle, Button } = require('powercord/components')
+const { Modal } = require('powercord/components/modal')
+const { close: closeModal } = require('powercord/modal')
+const { TextInput } = require('powercord/components/settings')
+const { React } = require('powercord/webpack')
+const { useState } = React
 
 const NotesHandler = new (require('../../NotesHandler'))()
-export default () => {
+module.exports = () => {
 	const [NotebookName, setNotebookName] = useState('')
 	return(
 		<Modal className='create-notebook' size={Modal.Sizes.SMALL}>
