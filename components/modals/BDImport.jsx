@@ -20,7 +20,7 @@ module.exports = () => {
           <TextAreaInput
             autofocus={true}
             autosize={true}
-            onChange={val => setPersonalPinsData(val)}
+            onChange={setPersonalPinsData}
             placeholder={`{\n  "choices": {\n  "defaultFilter": "channel",\n  "defaultOrder": "ascending",\n  "defaultSort": "notetime"\n  },\n  "notes": {`}
             resizeable={false}
             rows={7}
@@ -30,7 +30,7 @@ module.exports = () => {
           <TextInput
             note='You can add the notes to pre-existing notebooks!'
             defaultValue={'PersonalPins'}
-            onChange={value => setNotebook(value)}>
+            onChange={setNotebook}>
             Add to Notebook
           </TextInput>
         </AdvancedScrollerThin>

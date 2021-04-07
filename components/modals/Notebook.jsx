@@ -1,7 +1,7 @@
 const { TabBar, AdvancedScrollerThin, Button } = require('powercord/components')
 const { FormTitle, Flex, Icon, Tooltip } = require('powercord/components')
 const { close: closeModal, open: openModal } = require('powercord/modal')
-const { React, getModule, getAllModules } = require('powercord/webpack')
+const { React, getModule } = require('powercord/webpack')
 const { Modal } = require('powercord/components/modal')
 const { useState } = React
 
@@ -11,7 +11,7 @@ const NotebookManagementButton = require('../sections/NotebookManagementButton')
 const HelpModal = require('./HelpModal')
 
 const NotesHandler = new (require('../../NotesHandler'))()
-const SearchBar = getAllModules(m => Object.values(m).includes('SearchBar'))[1]
+const SearchBar = getModule(m => m.defaultProps?.useKeyboardNavigation, false)
 
 const classes = {
 	...getModule(['tabBarContainer'], false)
