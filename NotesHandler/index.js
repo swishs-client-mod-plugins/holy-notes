@@ -104,26 +104,56 @@ class NotesHandler {
 				for (let messageID in BDNotes[guildID][channelID]) {
 					let note = JSON.parse(BDNotes[guildID][channelID][messageID].message)
 					Object.assign(notes[notebook], {
-						[note.id] : {
-							id : note.id,
-							channel_id : channelID,
-							guild_id : guildID,
-							content : note.content,
-							author : {
-								id : note.author.id,
-								avatar : note.author.avatar,
-								discriminator : note.author.discriminator,
-								username : note.author.username,
+						[note.id]: {
+							id: note.id,
+							channel_id: channelID,
+							guild_id: guildID,
+							content: note.content,
+							author: {
+								id: note.author.id,
+								avatar: note.author.avatar,
+								discriminator: note.author.discriminator,
+								username: note.author.username,
 							},
-							timestamp : note.timestamp,
-							attachments : note.attachments,
-							embeds : note.embeds,
-							reactions : note.reactions
+							timestamp: note.timestamp,
+							attachments: note.attachments,
+							embeds: note.embeds,
+							reactions: note.reactions
 						}
 					})
 				}
 			}
 		}
+		fs.writeFileSync(notesPath, JSON.stringify(notes, null, '\t'))
+	}
+
+	refreshAvatars = async () => {
+		this.initNotes()
+		let notes
+		try { notes = this.getNotes() }
+		catch { return }
+
+		const { getModule } = require('powercord/webpack')
+		const User = getModule(m => m?.prototype?.tag, false)
+		const getCachedUser = getModule(['getCurrentUser'], false).getUser
+		const fetchUser = getModule(['getUser'], false).getUser
+
+		for (let notebook in notes) {
+			for (let noteID in notes[notebook]) {
+				let note = notes[notebook][noteID]
+				let user = getCachedUser(note.author.id) 
+					?? await fetchUser(note.author.id)
+					?? new User({...note.author})
+
+				Object.assign(notes[notebook][noteID].author, {
+					id: user.id,
+					avatar: user.avatar,
+					discriminator: user.discriminator,
+					username: user.username
+				})
+			}
+		}
+
 		fs.writeFileSync(notesPath, JSON.stringify(notes, null, '\t'))
 	}
 }

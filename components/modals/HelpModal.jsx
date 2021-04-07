@@ -1,9 +1,10 @@
-const { FormTitle, Button } = require('powercord/components')
+const { FormTitle, Button, Icon } = require('powercord/components')
 const { Modal } = require('powercord/components/modal')
 const { AdvancedScrollerThin } = require('powercord/components')
 const { close: closeModal, open: openModal } = require('powercord/modal')
 const { React } = require('powercord/webpack')
 
+const NotesHandler = new (require('../../NotesHandler'))()
 const BDModal = require('./BDImport')
 
 module.exports = () => {
@@ -43,6 +44,17 @@ module.exports = () => {
           onClick={closeModal}>
           Cancel
         </Button>
+        <div className='notebook-display-left'>
+          <Button
+            look={Button.Looks.GHOST}
+            color={Button.Colors.GREEN}
+            onClick={() => {
+              NotesHandler.refreshAvatars()
+              closeModal()
+            }}>
+            Refresh Avatars
+          </Button>
+        </div>
       </Modal.Footer>
     </Modal>
   )

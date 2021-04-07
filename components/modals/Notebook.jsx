@@ -112,7 +112,7 @@ module.exports = () => {
 					onClick={closeModal}>
 					Cancel
 				</Button>
-				<div className='sort-button-container'>
+				<div className='sort-button-container notebook-display-left'>
 					<Button
 						className='sort-button-text'
 						color={Button.Colors.TRANSPARENT}

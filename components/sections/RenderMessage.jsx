@@ -1,12 +1,13 @@
 const { getModule, contextMenu, React } = require('powercord/webpack')
 const { clipboard } = require('electron')
 
-const User = getModule(m => m?.prototype?.tag, false)
+const User = getModule(m => m.prototype?.tag, false)
 const NotesHandler = new (require('../../NotesHandler'))()
 const ContextMenu = getModule(['MenuGroup', 'MenuItem'], false)
-const ChannelTransitioner = getModule(['transitionTo'], false)
-const ChannelMessage = getModule(m => m?.type?.displayName === 'ChannelMessage', false)
-const MessageC = getModule(m => m?.prototype?.getReaction && m.prototype.isSystemDM, false)
+const transitionTo = getModule(['transitionTo'], false).transitionTo
+const Timestamp = getModule(m => m.prototype?.toDate && m.prototype.month, false)
+const ChannelMessage = getModule(m => m.type?.displayName === 'ChannelMessage', false)
+const MessageC = getModule(m => m.prototype?.getReaction && m.prototype.isSystemDM, false)
 
 let isHoldingDelete = false
 
@@ -36,13 +37,12 @@ const classes = {
 module.exports = ({ note, notebook, updateParent, fromDeleteModal, closeModal }) => {
 	const messageNote = Object.assign({}, note)
 	messageNote.author = new User({...note.author})
-	messageNote.timestamp = {
-		'toDate' : () => new Date(note.timestamp),
-		'locale' : () => 'en' }
-	if (messageNote?.embeds[0]?.timestamp)
-	messageNote.embeds[0].timestamp = {
-		'toDate' : () => new Date(note.timestamp),
-		'locale' : () => 'en' }
+	messageNote.timestamp = new Timestamp(new Date(note.timestamp))
+  if (messageNote?.embeds[0]?.timestamp)
+    messageNote.embeds.map((embed, index) => {
+      messageNote.embeds[index].timestamp = new Timestamp(new Date(embed.timestamp))
+  })
+
 	return (
 		<div className='holy-note'>
 			<ChannelMessage
@@ -88,22 +88,19 @@ const NoteContextMenu = ({ note, notebook, updateParent, closeModal }) => {
       <ContextMenu.MenuItem
         label='Jump to Message' id='jump'
         action={() => {
-          ChannelTransitioner.transitionTo(`/channels/${note.guild_id ? note.guild_id : '@me'}/${note.channel_id}/${note.id}`)
+          transitionTo(`/channels/${note.guild_id ? note.guild_id : '@me'}/${note.channel_id}/${note.id}`)
           closeModal()
-        }}
-      />
+        }}/>
       <ContextMenu.MenuItem
         label='Copy Text' id='ctext'
-        action={() => clipboard.writeText(note.content)}
-      />
+        action={() => clipboard.writeText(note.content)}/>
       <ContextMenu.MenuItem
         color='colorDanger'
         label='Delete Note' id='delete'
         action={() => {
           NotesHandler.deleteNote(note.id, notebook)
           updateParent()
-        }}
-      />
+        }}/>
       {Object.keys(NotesHandler.getNotes()).length !== 1 ?
         <ContextMenu.MenuItem
           label='Move Note' id='move'>
@@ -123,8 +120,7 @@ const NoteContextMenu = ({ note, notebook, updateParent, closeModal }) => {
         </ContextMenu.MenuItem> : null}
       <ContextMenu.MenuItem
         label='Copy ID' id='cid'
-        action={() => clipboard.writeText(note.id)}
-      />
+        action={() => clipboard.writeText(note.id)}/>
     </ContextMenu.default>
   </>
 }
