@@ -38,10 +38,12 @@ module.exports = ({ note, notebook, updateParent, fromDeleteModal, closeModal })
 	messageNote.author = new User({...note.author})
 	messageNote.timestamp = {
 		'toDate' : () => new Date(note.timestamp),
+		'toISOString' : () => new Date(note.timestamp).toISOString, // Works i suppose
 		'locale' : () => 'en' }
 	if (messageNote?.embeds[0]?.timestamp)
 	messageNote.embeds[0].timestamp = {
 		'toDate' : () => new Date(note.timestamp),
+		'toISOString' : () => new Date(note.timestamp).toISOString, // Works i suppose
 		'locale' : () => 'en' }
 	return (
 		<div className='holy-note'>
