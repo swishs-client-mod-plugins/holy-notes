@@ -1,4 +1,4 @@
-const { FormTitle, Button, Icon } = require('powercord/components')
+const { FormTitle, Button } = require('powercord/components')
 const { Modal } = require('powercord/components/modal')
 const { AdvancedScrollerThin } = require('powercord/components')
 const { close: closeModal, open: openModal } = require('powercord/modal')

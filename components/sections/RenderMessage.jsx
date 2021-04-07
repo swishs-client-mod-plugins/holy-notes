@@ -38,9 +38,8 @@ module.exports = ({ note, notebook, updateParent, fromDeleteModal, closeModal })
 	const messageNote = Object.assign({}, note)
 	messageNote.author = new User({...note.author})
 	messageNote.timestamp = new Timestamp(new Date(note.timestamp))
-  if (messageNote?.embeds[0]?.timestamp)
-    messageNote.embeds.map((embed, index) => {
-      messageNote.embeds[index].timestamp = new Timestamp(new Date(embed.timestamp))
+  messageNote.embeds.map((embed, index) => {
+    messageNote.embeds[index].timestamp = new Timestamp(new Date(embed.timestamp))
   })
 
 	return (
