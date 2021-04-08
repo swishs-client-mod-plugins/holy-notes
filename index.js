@@ -10,7 +10,7 @@ const NotebookButton = require('./components/icons/NotebookButton')
 const NotebookModal = require('./components/modals/Notebook')
 
 module.exports = class Notebook extends Plugin {
-  async startPlugin() {    
+  async startPlugin() {
     this._injectHeaderBarContainer()
     this._injectContextMenu()
 
@@ -22,10 +22,10 @@ module.exports = class Notebook extends Plugin {
     uninject('holy-context-menu')
   }
 
-  async _injectHeaderBarContainer () {
+  async _injectHeaderBarContainer() {
     const HeaderBarContainer = await getModuleByDisplayName('HeaderBarContainer')
     const classes = await getModule(['iconWrapper', 'clickable'])
-    inject('holy-header-bar', HeaderBarContainer.prototype, 'render', (args, res)=> {
+    inject('holy-header-bar', HeaderBarContainer.prototype, 'render', (args, res) => {
       res.props.toolbar.props.children.push(
         React.createElement(Tooltip, {
           text: 'Notebook', position: 'bottom'
@@ -44,11 +44,11 @@ module.exports = class Notebook extends Plugin {
     const Menu = await getModule(['MenuGroup', 'MenuItem'])
     const MessageContextMenu = await getModule(m => m.default?.displayName === 'MessageContextMenu')
     inject('holy-context-menu', MessageContextMenu, 'default', (args, res) => {
-      if (!findInReactTree(res, c => c.props && c.props.id == 'notebook')) res.props.children.splice(4, 0,
+      if (!findInReactTree(res, c => c.props?.id == 'notebook')) res.props.children.splice(4, 0,
         React.createElement(Menu.MenuGroup, null, React.createElement(Menu.MenuItem, {
           action: () => NotesHandler.addNote(args[0], 'Main'),
           id: 'notebook', label: 'Note Message'
-        }, Object.keys(NotesHandler.getNotes()).map(notebook => 
+        }, Object.keys(NotesHandler.getNotes()).map(notebook =>
           React.createElement(Menu.MenuItem, {
             label: `Add to ${notebook}`, id: notebook,
             action: () => NotesHandler.addNote(args[0], notebook)

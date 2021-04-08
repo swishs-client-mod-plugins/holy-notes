@@ -10,7 +10,7 @@ class NotesHandler {
 
 	initNotes = () => {
 		if (!fs.existsSync(notesPath)) {
-			fs.writeFileSync(notesPath, JSON.stringify({ 'Main' : {} }, null, '\t'))
+			fs.writeFileSync(notesPath, JSON.stringify({ 'Main': {} }, null, '\t'))
 		}
 	}
 
@@ -22,30 +22,30 @@ class NotesHandler {
 	addNote = (noteData, notebook) => {
 		this.initNotes()
 		let notes
-		try { notes = this.getNotes() } 
+		try { notes = this.getNotes() }
 		catch { return }
 
-    let noteFormat = {
-			[noteData.message.id] : {
-				'id' : noteData.message.id,
-				'channel_id' : noteData.channel.id,
-				'guild_id' : noteData.channel.guild_id,
-				'content' : noteData.message.content,
-				'author' : {
-					'id' : noteData.message.author.id,
-					'avatar' : noteData.message.author.avatar,
-					'discriminator' : noteData.message.author.discriminator,
-					'username' : noteData.message.author.username,
+		let noteFormat = {
+			[noteData.message.id]: {
+				'id': noteData.message.id,
+				'channel_id': noteData.channel.id,
+				'guild_id': noteData.channel.guild_id,
+				'content': noteData.message.content,
+				'author': {
+					'id': noteData.message.author.id,
+					'avatar': noteData.message.author.avatar,
+					'discriminator': noteData.message.author.discriminator,
+					'username': noteData.message.author.username,
 				},
-				'timestamp' : noteData.message.timestamp,
-				'attachments' : noteData.message.attachments,
-				'embeds' : noteData.message.embeds,
-				'reactions' : noteData.message.reactions
+				'timestamp': noteData.message.timestamp,
+				'attachments': noteData.message.attachments,
+				'embeds': noteData.message.embeds,
+				'reactions': noteData.message.reactions
 			}
-    }
+		}
 
 		Object.assign(notes[notebook], noteFormat)
-    fs.writeFileSync(notesPath, JSON.stringify(notes, null, '\t'))
+		fs.writeFileSync(notesPath, JSON.stringify(notes, null, '\t'))
 	}
 
 	deleteNote = (note, notebook) => {
@@ -59,24 +59,24 @@ class NotesHandler {
 		fs.writeFileSync(notesPath, JSON.stringify(notes, null, '\t'))
 	}
 
-	moveNote = (note, toNotebook, fromNotebook ) => {
+	moveNote = (note, toNotebook, fromNotebook) => {
 		this.initNotes()
 		let notes
-		try { notes = this.getNotes() } 
+		try { notes = this.getNotes() }
 		catch { return }
 
 		delete notes[fromNotebook][note.id]
-		Object.assign(notes[toNotebook], { [note.id] : note })
+		Object.assign(notes[toNotebook], { [note.id]: note })
 		fs.writeFileSync(notesPath, JSON.stringify(notes, null, '\t'))
 	}
 
 	newNotebook = (name) => {
 		this.initNotes()
 		let notes
-		try { notes = this.getNotes() } 
+		try { notes = this.getNotes() }
 		catch { return }
 
-		Object.assign(notes, { [name] : {} })
+		Object.assign(notes, { [name]: {} })
 		fs.writeFileSync(notesPath, JSON.stringify(notes, null, '\t'))
 	}
 
@@ -96,7 +96,7 @@ class NotesHandler {
 		try { notes = this.getNotes() }
 		catch { return }
 		if (!Object.keys(notes).includes(notebook))
-			Object.assign(notes, { [notebook] : {} })
+			Object.assign(notes, { [notebook]: {} })
 		let BDNotes = JSON.parse(data).notes
 
 		for (let guildID in BDNotes) {
@@ -141,12 +141,11 @@ class NotesHandler {
 		for (let notebook in notes) {
 			for (let noteID in notes[notebook]) {
 				let note = notes[notebook][noteID]
-				let user = getCachedUser(note.author.id) 
+				let user = getCachedUser(note.author.id)
 					?? await fetchUser(note.author.id)
-					?? new User({...note.author})
+					?? new User({ ...note.author })
 
 				Object.assign(notes[notebook][noteID].author, {
-					id: user.id,
 					avatar: user.avatar,
 					discriminator: user.discriminator,
 					username: user.username

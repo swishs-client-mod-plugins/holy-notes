@@ -19,7 +19,7 @@ const classes = {
 
 const NotebookRender = ({ notes, notebook, updateParent, sortDirection, sortType, searchInput }) => {
 	if (Object.keys(notes).length === 0) {
-		return ( <NoResultsMessage error={false}/> )
+		return (<NoResultsMessage error={false} />)
 	} else {
 		let MessageArray
 		sortType ?
@@ -29,7 +29,7 @@ const NotebookRender = ({ notes, notebook, updateParent, sortDirection, sortType
 					notebook={notebook}
 					updateParent={updateParent}
 					fromDeleteModal={false}
-					closeModal={closeModal}/>
+					closeModal={closeModal} />
 			) :
 			MessageArray = Object.keys(notes).map(note =>
 				<RenderMessage
@@ -37,7 +37,7 @@ const NotebookRender = ({ notes, notebook, updateParent, sortDirection, sortType
 					notebook={notebook}
 					updateParent={updateParent}
 					fromDeleteModal={false}
-					closeModal={closeModal}/>
+					closeModal={closeModal} />
 			).sort((a, b) => new Date(b.props.note.timestamp) - new Date(a.props.note.timestamp))
 		if (!sortDirection) MessageArray.reverse()
 
@@ -68,16 +68,16 @@ module.exports = () => {
 						</FormTitle>
 						<Icon
 							className='help-icon' name='HelpCircle'
-							onClick={() => openModal(() => <HelpModal/>)}/>
+							onClick={() => openModal(() => <HelpModal />)} />
 						<SearchBar
 							className={'notebook-search'}
 							size={SearchBar.Sizes.MEDIUM}
 							autofocus={false}
 							placeholder='Search'
 							onQueryChange={query => setSearchInput(query)}
-       				onClear={() => setSearchInput('')}
-							query={SearchInput}/>
-						<Modal.CloseButton onClick={closeModal}/>
+							onClear={() => setSearchInput('')}
+							query={SearchInput} />
+						<Modal.CloseButton onClick={closeModal} />
 					</Modal.Header>
 					<div className={classes.tabBarContainer}>
 						<TabBar
@@ -99,14 +99,14 @@ module.exports = () => {
 							updateParent={() => forceUpdate(u => ~u)}
 							sortDirection={SortDirection}
 							sortType={SortType}
-							searchInput={SearchInput}/>
+							searchInput={SearchInput} />
 					</AdvancedScrollerThin>
 				</Modal.Content>
 			</Flex>
 			<Modal.Footer>
-				<NotebookManagementButton notebook={CurrentNotebook}/>
+				<NotebookManagementButton notebook={CurrentNotebook} />
 				<Button
-					style={{ paddingLeft : '5px', paddingRight : '10px' }}
+					style={{ paddingLeft: '5px', paddingRight: '10px' }}
 					look={Button.Looks.LINK}
 					color={Button.Colors.TRANSPARENT}
 					onClick={closeModal}>
@@ -125,11 +125,11 @@ module.exports = () => {
 						onClick={() => setSortDirection(!SortDirection)}>
 						{SortDirection
 							? <Tooltip text='New to Old' position='top'>
-									<Icon name='ArrowDropDown'/>
-								</Tooltip>
+								<Icon name='ArrowDropDown' />
+							</Tooltip>
 							: <Tooltip text='Old to New' position='top'>
-									<Icon name='ArrowDropUp'/>
-								</Tooltip>
+								<Icon name='ArrowDropUp' />
+							</Tooltip>
 						}
 					</Button>
 				</div>

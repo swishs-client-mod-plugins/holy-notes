@@ -8,11 +8,11 @@ const { useState } = React
 const NotesHandler = new (require('../../NotesHandler'))()
 module.exports = () => {
 	const [NotebookName, setNotebookName] = useState('')
-	return(
+	return (
 		<Modal className='create-notebook' size={Modal.Sizes.SMALL}>
 			<Modal.Header>
 				<FormTitle tag='h3'>Create Notebook</FormTitle>
-				<Modal.CloseButton onClick={closeModal}/>
+				<Modal.CloseButton onClick={closeModal} />
 			</Modal.Header>
 			<Modal.Content>
 				<TextInput
@@ -24,8 +24,8 @@ module.exports = () => {
 			</Modal.Content>
 			<Modal.Footer>
 				<Button
-					onClick={() => { 
-						if(NotebookName !== '')
+					onClick={() => {
+						if (NotebookName !== '')
 							NotesHandler.newNotebook(NotebookName)
 						closeModal()
 					}}

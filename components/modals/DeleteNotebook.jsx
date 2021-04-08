@@ -14,19 +14,19 @@ module.exports = ({ notebook }) => {
 		<Modal className='delete-notebook' size={Modal.Sizes.LARGE}>
 			<Modal.Header>
 				<FormTitle tag='h3'>Confirm Deletion</FormTitle>
-				<Modal.CloseButton onClick={closeModal}/>
+				<Modal.CloseButton onClick={closeModal} />
 			</Modal.Header>
 			<Modal.Content>
 				<AdvancedScrollerThin fade={true}>
 					{JSON.stringify(notes) === '{}' || !notes
-						? <NoResultsMessage error={false}/> 
+						? <NoResultsMessage error={false} />
 						: Object.keys(notes).map(note =>
-							 <RenderMessage 
-							 	note={notes[note]} 
+							<RenderMessage
+								note={notes[note]}
 								notebook={notebook}
 								fromDeleteModal={true}
 							/>
-					)}
+						)}
 				</AdvancedScrollerThin>
 			</Modal.Content>
 			<Modal.Footer>

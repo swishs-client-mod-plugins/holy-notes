@@ -10,7 +10,7 @@ module.exports = ({ notebook }) => {
 		return <>
 			<Button
 				color={Button.Colors.RED}
-				onClick={() => openModal(() => <DeleteNotebook notebook={notebook}/>)}>
+				onClick={() => openModal(() => <DeleteNotebook notebook={notebook} />)}>
 				Delete Notebook
 			</Button>
 		</>
@@ -18,7 +18,7 @@ module.exports = ({ notebook }) => {
 		return <>
 			<Button
 				color={Button.Colors.GREEN}
-				onClick={() => openModal(() => <CreateNotebook/>)}>
+				onClick={() => openModal(() => <CreateNotebook />)}>
 				Create Notebook
 			</Button>
 		</>

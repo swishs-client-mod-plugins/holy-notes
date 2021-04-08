@@ -13,7 +13,7 @@ module.exports = () => {
     <Modal className='bd-const-modal' size={Modal.Sizes.LARGE}>
       <Modal.Header>
         <FormTitle tag='h3'>Import from PersonalPins</FormTitle>
-        <Modal.CloseButton onClick={closeModal}/>
+        <Modal.CloseButton onClick={closeModal} />
       </Modal.Header>
       <Modal.Content>
         <AdvancedScrollerThin fade={true}>
