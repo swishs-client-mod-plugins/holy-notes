@@ -12,11 +12,7 @@ A Vizality plugin that adds message noting functionality. (Supports imports from
 ### Installation
 For installation, go to **Plugins -> Open a CMD / Powershell / Terminal / Gitbash** in the folder, and enter the following:
 ```
-git clone https://github.com/Swishilicous/holy-notes
-```
-Or run this command in the Vizality Client:
-```
-.plugin install https://github.com/Swishilicous/holy-notes
+git clone -b vizality https://github.com/swishs-client-mod-plugins/holy-notes
 ```
 
 ### Credits
