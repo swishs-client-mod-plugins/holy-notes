@@ -27,20 +27,20 @@ class NotesHandler {
 
 		let noteFormat = {
 			[noteData.message.id]: {
-				'id': noteData.message.id,
-				'channel_id': noteData.channel.id,
-				'guild_id': noteData.channel.guild_id,
-				'content': noteData.message.content,
-				'author': {
-					'id': noteData.message.author.id,
-					'avatar': noteData.message.author.avatar,
-					'discriminator': noteData.message.author.discriminator,
-					'username': noteData.message.author.username,
+				id: noteData.message.id,
+				channel_id: noteData.channel.id,
+				guild_id: noteData.channel.guild_id,
+				content: noteData.message.content,
+				author: {
+					id: noteData.message.author.id,
+					avatar: noteData.message.author.avatar,
+					discriminator: noteData.message.author.discriminator,
+					username: noteData.message.author.username,
 				},
-				'timestamp': noteData.message.timestamp,
-				'attachments': noteData.message.attachments,
-				'embeds': noteData.message.embeds,
-				'reactions': noteData.message.reactions
+				timestamp: noteData.message.timestamp,
+				attachments: noteData.message.attachments,
+				embeds: noteData.message.embeds,
+				reactions: noteData.message.reactions
 			}
 		}
 

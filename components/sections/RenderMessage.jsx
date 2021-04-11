@@ -1,4 +1,4 @@
-const { getModule, contextMenu, React } = require('powercord/webpack')
+const { getModule, contextMenu, React, React: { useEffect } } = require('powercord/webpack')
 const { clipboard } = require('electron')
 
 const User = getModule(m => m.prototype?.tag, false)
@@ -9,23 +9,22 @@ const Timestamp = getModule(m => m.prototype?.toDate && m.prototype.month, false
 const ChannelMessage = getModule(m => m.type?.displayName === 'ChannelMessage', false)
 const MessageTemplate = getModule(m => m.prototype?.getReaction && m.prototype.isSystemDM, false)
 
-let isHoldingDelete = false
-
-const deleteToggle = (e) => {
-  if (e.key === 'Delete') {
-    if (e.type === 'keydown') {
-      isHoldingDelete = true
-    } else if (e.type === 'keyup') {
-      isHoldingDelete = false
-    }
-  }
-}
-
-document.addEventListener('keydown', deleteToggle)
-document.addEventListener('keyup', deleteToggle)
-
 module.exports = ({ note, notebook, updateParent, fromDeleteModal, closeModal }) => {
   const classes = getModule(['cozyMessage'], false)
+
+  let isHoldingDelete
+  useEffect(() => {
+    const deleteHandler = (e) => e.key === 'Delete' && (isHoldingDelete = e.type === 'keydown')
+    
+    document.addEventListener('keydown', deleteHandler)
+    document.addEventListener('keyup', deleteHandler)
+
+    return () => {
+      document.removeEventListener('keydown', deleteHandler)
+      document.removeEventListener('keyup', deleteHandler)
+    }
+  }, [])
+
   return (
     <div className='holy-note'>
       <ChannelMessage
@@ -45,9 +44,9 @@ module.exports = ({ note, notebook, updateParent, fromDeleteModal, closeModal })
             Object.assign({ ...note }, {
               author: new User({ ...note.author }),
               timestamp: new Timestamp(new Date(note.timestamp)),
-              embeds: note.embeds.map(embed => Object.assign(embed, {
+              embeds: note.embeds.map(embed => embed.timestamp ? Object.assign(embed, {
                 timestamp: new Timestamp(new Date(embed.timestamp))
-              }))
+              }) : embed)
             })
           )
         }
@@ -86,7 +85,7 @@ const NoteContextMenu = ({ note, notebook, updateParent, closeModal }) => {
       <ContextMenu.MenuItem
         label='Jump to Message' id='jump'
         action={() => {
-          transitionTo(`/channels/${note.guild_id ? note.guild_id : '@me'}/${note.channel_id}/${note.id}`)
+          transitionTo(`/channels/${note.guild_id ?? '@me'}/${note.channel_id}/${note.id}`)
           closeModal()
         }} />
       <ContextMenu.MenuItem

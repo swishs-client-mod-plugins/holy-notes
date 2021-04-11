@@ -21,7 +21,15 @@ module.exports = () => {
             autofocus={true}
             autosize={true}
             onChange={setPersonalPinsData}
-            placeholder={`{\n  "choices": {\n  "defaultFilter": "channel",\n  "defaultOrder": "ascending",\n  "defaultSort": "notetime"\n  },\n  "notes": {`}
+            placeholder={[
+              '{',
+              '"  choices": {',
+              '  "defaultFilter": "channel",',
+              '  "defaultOrder": "ascending",',
+              '  "defaultSort": "notetime"',
+              '  },',
+              '  "notes": {',
+            ].join('\n')}
             resizeable={false}
             rows={7}
             value={PersonalPinsData}>

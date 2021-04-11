@@ -1,9 +1,8 @@
 const { TabBar, AdvancedScrollerThin, Button } = require('powercord/components')
 const { FormTitle, Flex, Icon, Tooltip } = require('powercord/components')
 const { close: closeModal, open: openModal } = require('powercord/modal')
-const { React, getModule } = require('powercord/webpack')
+const { React, React: { useState }, getModule } = require('powercord/webpack')
 const { Modal } = require('powercord/components/modal')
-const { useState } = React
 
 const NoResultsMessage = require('../sections/NoResultsMessage')
 const RenderMessage = require('../sections/RenderMessage')
@@ -12,10 +11,6 @@ const HelpModal = require('./HelpModal')
 
 const NotesHandler = new (require('../../NotesHandler'))()
 const SearchBar = getModule(m => m.defaultProps?.useKeyboardNavigation, false)
-
-const classes = {
-	...getModule(['tabBarContainer'], false)
-}
 
 const NotebookRender = ({ notes, notebook, updateParent, sortDirection, sortType, searchInput }) => {
 	if (Object.keys(notes).length === 0) {
@@ -51,13 +46,14 @@ const NotebookRender = ({ notes, notebook, updateParent, sortDirection, sortType
 }
 
 module.exports = () => {
-	const [CurrentNotebook, setCurrentNotebook] = useState('Main')
-	const [SearchInput, setSearchInput] = useState('')
-	const [SortDirection, setSortDirection] = useState(false)
-	const [SortType, setSortType] = useState(false)
+	const classes = getModule(['tabBarContainer'], false)
+	const [currentNotebook, setCurrentNotebook] = useState('Main')
+	const [searchInput, setSearchInput] = useState('')
+	const [sortDirection, setSortDirection] = useState(false)
+	const [sortType, setSortType] = useState(false)
 	// since hooks don't have a native forceUpdate() function this is the easisest workaround
 	const forceUpdate = useState(0)[1]
-	const notes = NotesHandler.getNotes()[CurrentNotebook]
+	const notes = NotesHandler.getNotes()[currentNotebook]
 	return (
 		<Modal className='notebook' size={Modal.Sizes.LARGE} style={{ borderRadius: '8px' }}>
 			<Flex className={`notebook-flex`} direction={Flex.Direction.VERTICAL} style={{ width: '100%' }}>
@@ -76,13 +72,13 @@ module.exports = () => {
 							placeholder='Search'
 							onQueryChange={query => setSearchInput(query)}
 							onClear={() => setSearchInput('')}
-							query={SearchInput} />
+							query={searchInput} />
 						<Modal.CloseButton onClick={closeModal} />
 					</Modal.Header>
 					<div className={classes.tabBarContainer}>
 						<TabBar
 							className={classes.tabBar}
-							selectedItem={CurrentNotebook}
+							selectedItem={currentNotebook}
 							type={TabBar.Types.TOP}
 							onItemSelect={setCurrentNotebook}>
 							{Object.keys(NotesHandler.getNotes()).map(notebook =>
@@ -95,16 +91,16 @@ module.exports = () => {
 					<AdvancedScrollerThin fade={true}>
 						<NotebookRender
 							notes={notes}
-							notebook={CurrentNotebook}
+							notebook={currentNotebook}
 							updateParent={() => forceUpdate(u => ~u)}
-							sortDirection={SortDirection}
-							sortType={SortType}
-							searchInput={SearchInput} />
+							sortDirection={sortDirection}
+							sortType={sortType}
+							searchInput={searchInput} />
 					</AdvancedScrollerThin>
 				</Modal.Content>
 			</Flex>
 			<Modal.Footer>
-				<NotebookManagementButton notebook={CurrentNotebook} />
+				<NotebookManagementButton notebook={currentNotebook} />
 				<Button
 					style={{ paddingLeft: '5px', paddingRight: '10px' }}
 					look={Button.Looks.LINK}
@@ -116,14 +112,14 @@ module.exports = () => {
 					<Button
 						className='sort-button-text'
 						color={Button.Colors.TRANSPARENT}
-						onClick={() => setSortType(!SortType)}>
-						{SortType ? 'Date Added' : 'Message Date'}
+						onClick={() => setSortType(!sortType)}>
+						{sortType ? 'Date Added' : 'Message Date'}
 					</Button>
 					<Button
 						className='sort-button-icon'
 						color={Button.Colors.TRANSPARENT}
-						onClick={() => setSortDirection(!SortDirection)}>
-						{SortDirection
+						onClick={() => setSortDirection(!sortDirection)}>
+						{sortDirection
 							? <Tooltip text='New to Old' position='top'>
 								<Icon name='ArrowDropDown' />
 							</Tooltip>
