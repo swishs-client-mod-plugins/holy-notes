@@ -12,5 +12,5 @@ Welcome to the dark side. This is a port of Holy Notes for powercord.
 ### Installation
 For installation, go to **Plugins -> Open a CMD / Powershell / Terminal / Gitbash** in the folder, and enter the following:
 ```
-git clone -b powercord https://github.com/Swishilicous/holy-notes
+git clone https://github.com/Swishilicous/holy-notes
 ```
