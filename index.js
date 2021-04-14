@@ -30,16 +30,27 @@ export default class Notebook extends Plugin {
   async _patchHeaderBarContainer () {
     const HeaderBarContainer = await getModuleByDisplayName('HeaderBarContainer')
     const classes = await getModule('iconWrapper', 'clickable')
-    patch('holy-header-bar', HeaderBarContainer.prototype, 'render', (args, res)=> {
-      res.props.toolbar.props.children.push(
+    patch('holy-header-bar', HeaderBarContainer.prototype, 'render', (_args, res)=> {
+      const toolbarButtons = res?.props.toolbar?.props.children
+
+      toolbarButtons?.splice(
+        toolbarButtons.length - 2,
+        0,
         <Tooltip text='Notebook' position='bottom'>
-          <div className={joinClassNames('note-button', classes.iconWrapper, classes.clickable)}>
+          <div
+            className={joinClassNames(
+              'note-button',
+              classes.iconWrapper,
+              classes.clickable
+            )}
+          >
             <NotebookButton
               className={joinClassNames('note-button', classes.icon)}
-              onClick={() => openModal(() => <NotebookModal/>)}
+              onClick={() => openModal(() => <NotebookModal />)}
             />
           </div>
-        </Tooltip>)
+        </Tooltip>
+      )
       return res
     })
   }
