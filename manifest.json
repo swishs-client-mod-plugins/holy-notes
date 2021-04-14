@@ -1,7 +1,7 @@
 {
     "name": "Holy Notes",
     "description": "Adds message noting functionality to Discord.",
-    "version": "1.1.1",
+    "version": "1.2.0",
     "author": {
         "name" : "Swishilicous#3200",
         "id" : "474322346937810955"
