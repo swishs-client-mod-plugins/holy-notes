@@ -7,7 +7,8 @@ const ContextMenu = getModule(['MenuGroup', 'MenuItem'], false)
 const transitionTo = getModule(['transitionTo'], false).transitionTo
 const Timestamp = getModule(m => m.prototype?.toDate && m.prototype.month, false)
 const ChannelMessage = getModule(m => m.type?.displayName === 'ChannelMessage', false)
-const MessageTemplate = getModule(m => m.prototype?.getReaction && m.prototype.isSystemDM, false)
+const Message = getModule(m => m.prototype?.getReaction && m.prototype.isSystemDM, false)
+const Channel = getModule(m => m.prototype?.getGuildId, false)
 
 module.exports = ({ note, notebook, updateParent, fromDeleteModal, closeModal }) => {
   const classes = getModule(['cozyMessage'], false)
@@ -40,7 +41,7 @@ module.exports = ({ note, notebook, updateParent, fromDeleteModal, closeModal })
           classes.groupStart
         ].join(' ')}
         message={
-          new MessageTemplate(
+          new Message(
             Object.assign({ ...note }, {
               author: new User({ ...note.author }),
               timestamp: new Timestamp(new Date(note.timestamp)),
@@ -50,11 +51,7 @@ module.exports = ({ note, notebook, updateParent, fromDeleteModal, closeModal })
             })
           )
         }
-        channel={{
-          isPrivate: () => false,
-          isSystemDM: () => false,
-          getGuildId: () => 'uwu'
-        }}
+        channel={new Channel({ id: 'holy-notes' })}
         onClick={() => {
           if (isHoldingDelete && !fromDeleteModal) {
             NotesHandler.deleteNote(note.id, notebook)

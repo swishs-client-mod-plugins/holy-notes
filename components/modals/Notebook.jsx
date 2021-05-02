@@ -14,11 +14,11 @@ const SearchBar = getModule(m => m.defaultProps?.useKeyboardNavigation, false)
 
 const NotebookRender = ({ notes, notebook, updateParent, sortDirection, sortType, searchInput }) => {
 	if (Object.keys(notes).length === 0) {
-		return (<NoResultsMessage error={false} />)
+		return <NoResultsMessage error={false} />
 	} else {
-		let MessageArray
+		let messageArray
 		sortType ?
-			MessageArray = Object.keys(notes).map(note =>
+			messageArray = Object.keys(notes).map(note =>
 				<RenderMessage
 					note={notes[note]}
 					notebook={notebook}
@@ -26,7 +26,7 @@ const NotebookRender = ({ notes, notebook, updateParent, sortDirection, sortType
 					fromDeleteModal={false}
 					closeModal={closeModal} />
 			) :
-			MessageArray = Object.keys(notes).map(note =>
+			messageArray = Object.keys(notes).map(note =>
 				<RenderMessage
 					note={notes[note]}
 					notebook={notebook}
@@ -34,14 +34,14 @@ const NotebookRender = ({ notes, notebook, updateParent, sortDirection, sortType
 					fromDeleteModal={false}
 					closeModal={closeModal} />
 			).sort((a, b) => new Date(b.props.note.timestamp) - new Date(a.props.note.timestamp))
-		if (!sortDirection) MessageArray.reverse()
+		if (!sortDirection) messageArray.reverse()
 
 		/* Search Filter */
 		if (searchInput && searchInput !== '')
-			MessageArray = MessageArray.filter(m =>
+			messageArray = messageArray.filter(m =>
 				m.props.note.content.toLowerCase()
 					.indexOf(searchInput.trim()) > -1)
-		return (MessageArray)
+		return messageArray
 	}
 }
 

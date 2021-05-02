@@ -23,7 +23,7 @@ module.exports = () => {
             onChange={setPersonalPinsData}
             placeholder={[
               '{',
-              '"  choices": {',
+              '  "choices": {',
               '  "defaultFilter": "channel",',
               '  "defaultOrder": "ascending",',
               '  "defaultSort": "notetime"',
