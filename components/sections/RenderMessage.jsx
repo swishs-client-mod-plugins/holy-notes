@@ -85,7 +85,7 @@ const NoteContextMenu = ({ note, notebook, updateParent, closeModal }) => {
           transitionTo(`/channels/${note.guild_id ?? '@me'}/${note.channel_id}/${note.id}`)
           closeModal()
         }} />
-      {note.content &&
+      {!!note.content &&
       <ContextMenu.MenuItem
         label='Copy Content' id='ctext'
         action={() => clipboard.writeText(note.content)} />}
