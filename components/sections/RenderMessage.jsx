@@ -85,9 +85,14 @@ const NoteContextMenu = ({ note, notebook, updateParent, closeModal }) => {
           transitionTo(`/channels/${note.guild_id ?? '@me'}/${note.channel_id}/${note.id}`)
           closeModal()
         }} />
+      {note.content &&
       <ContextMenu.MenuItem
-        label='Copy Text' id='ctext'
-        action={() => clipboard.writeText(note.content)} />
+        label='Copy Content' id='ctext'
+        action={() => clipboard.writeText(note.content)} />}
+      {note.attachments.length >= 1 &&
+      <ContextMenu.MenuItem
+        label='Copy Attachment Link' id='cimage'
+        action={() => clipboard.writeText(note.attachments[0].url)}/>}
       <ContextMenu.MenuItem
         color='colorDanger'
         label='Delete Note' id='delete'

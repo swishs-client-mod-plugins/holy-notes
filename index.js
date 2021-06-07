@@ -7,12 +7,14 @@ const { findInReactTree } = require('powercord/util')
 
 const NotesHandler = new (require('./NotesHandler'))()
 const NotebookButton = require('./components/icons/NotebookButton')
+const NoteButton = require('./components/icons/NoteButton');
 const NotebookModal = require('./components/modals/Notebook')
 
 module.exports = class Notebook extends Plugin {
   async startPlugin() {
     this._injectHeaderBarContainer()
     this._injectContextMenu()
+    this._injectToolbar()
 
     this.loadStylesheet('style.scss')
   }
@@ -20,6 +22,7 @@ module.exports = class Notebook extends Plugin {
   pluginWillUnload() {
     uninject('holy-header-bar')
     uninject('holy-context-menu')
+    uninject('holy-toolbar')
   }
 
   async _injectHeaderBarContainer() {
@@ -58,5 +61,22 @@ module.exports = class Notebook extends Plugin {
       return res
     })
     MessageContextMenu.default.displayName = 'MessageContextMenu'
+  }
+
+  async _injectToolbar() {
+    const MiniPopover = await getModule((m) => m?.default?.displayName === 'MiniPopover');
+    inject('holy-toolbar', MiniPopover, 'default', (args, res) => {
+        const props = findInReactTree(res, (r) => r?.message);
+        const channel = findInReactTree(args, (r) => r?.channel);
+        if (!props) return res;
+        res.props.children.unshift(
+            React.createElement(NoteButton, {
+                message: props.message,
+                channel: channel.channel
+            })
+        );
+        return res;
+    });
+    MiniPopover.default.displayName = 'MiniPopover';
   }
 }
