@@ -45,7 +45,7 @@ module.exports = class Notebook extends Plugin {
 
   async _injectContextMenu() {
     const Menu = await getModule(['MenuGroup', 'MenuItem'])
-    const MessageContextMenu = await getModule(m => m.default?.displayName === 'MessageContextMenu')
+    const MessageContextMenu = await getModule((m) => m?.default?.displayName === 'MessageContextMenu')
     inject('holy-context-menu', MessageContextMenu, 'default', (args, res) => {
       if (!findInReactTree(res, c => c.props?.id == 'notebook')) res.props.children.splice(4, 0,
         React.createElement(Menu.MenuGroup, null, React.createElement(Menu.MenuItem, {
