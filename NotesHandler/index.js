@@ -135,7 +135,7 @@ class NotesHandler {
 
 		const { getModule } = require('powercord/webpack')
 		const User = getModule(m => m?.prototype?.tag, false)
-		const getCachedUser = getModule(['getCurrentUser'], false).getUser
+		const getCachedUser = getModule(['getCurrentUser', 'getUser'], false).getUser
 		const fetchUser = getModule(['getUser'], false).getUser
 
 		for (let notebook in notes) {

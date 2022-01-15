@@ -1,5 +1,4 @@
-const { TabBar, AdvancedScrollerThin, Button } = require('powercord/components')
-const { FormTitle, Flex, Icon, Tooltip } = require('powercord/components')
+const { FormTitle, Flex, Icon, Tooltip, TabBar, AdvancedScrollerThin, Button } = require('powercord/components')
 const { close: closeModal, open: openModal } = require('powercord/modal')
 const { React, React: { useState }, getModule } = require('powercord/webpack')
 const { Modal } = require('powercord/components/modal')

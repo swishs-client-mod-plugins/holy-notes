@@ -1,6 +1,5 @@
-const { FormTitle, Button } = require('powercord/components')
 const { Modal } = require('powercord/components/modal')
-const { AdvancedScrollerThin } = require('powercord/components')
+const { AdvancedScrollerThin, FormTitle, Button } = require('powercord/components')
 const { close: closeModal } = require('powercord/modal')
 const { React } = require('powercord/webpack')
 
