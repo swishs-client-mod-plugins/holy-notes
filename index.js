@@ -23,6 +23,7 @@ module.exports = class Notebook extends Plugin {
     uninject('holy-header-bar')
     uninject('holy-context-menu')
     uninject('holy-toolbar')
+    uninject('holy-context-lazy-menu')
   }
 
   async _injectHeaderBarContainer() {
@@ -44,25 +45,52 @@ module.exports = class Notebook extends Plugin {
   }
 
   async _injectContextMenu() {
-    const Menu = await getModule(['MenuGroup', 'MenuItem'])
-    const MessageContextMenu = await getModule((m) => m?.default?.displayName === 'MessageContextMenu')
+    this.lazyPatchContextMenu('MessageContextMenu', MessageContextMenu => {
+			const { MenuGroup, MenuItem } = getModule(['MenuGroup', 'MenuItem'], false)
+			inject('holy-context-menu', MessageContextMenu, 'default', (args, res) => {
     if (!MessageContextMenu) return;
 
-    inject('holy-context-menu', MessageContextMenu, 'default', (args, res) => {
       if (!findInReactTree(res, c => c.props?.id == 'notebook')) res.props.children.splice(4, 0,
-        React.createElement(Menu.MenuGroup, null, React.createElement(Menu.MenuItem, {
+        React.createElement(MenuGroup, null, React.createElement(MenuItem, {
           action: () => NotesHandler.addNote(args[0], 'Main'),
           id: 'notebook', label: 'Note Message'
         }, Object.keys(NotesHandler.getNotes()).map(notebook =>
-          React.createElement(Menu.MenuItem, {
+          React.createElement(MenuItem, {
             label: `Add to ${notebook}`, id: notebook,
             action: () => NotesHandler.addNote(args[0], notebook)
-          })
-        ))
-      ))
-      return res
-    })
-    MessageContextMenu.default.displayName = 'MessageContextMenu'
+              })
+            ))
+          ))
+          return res
+        })
+        MessageContextMenu.default.displayName = 'MessageContextMenu'
+      })
+    }
+
+  async lazyPatchContextMenu(displayName, patch) {
+		const filter = m => m.default && m.default.displayName === displayName
+		const m = getModule(filter, false)
+		if (m) patch(m)
+		else {
+			const module = getModule([ 'openContextMenuLazy' ], false)
+			inject('holy-context-lazy-menu', module, 'openContextMenuLazy', args => {
+				const lazyRender = args[1]
+				args[1] = async () => {
+					const render = await lazyRender(args[0])
+
+					return (config) => {
+						const menu = render(config)
+						if (menu?.type?.displayName === displayName && patch) {
+							uninject('holy-context-lazy-menu')
+							patch(getModule(filter, false))
+							patch = false
+						}
+						return menu
+					}
+				}
+				return args
+			}, true)
+		}
   }
 
   async _injectToolbar() {
