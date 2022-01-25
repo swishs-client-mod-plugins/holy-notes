@@ -39,7 +39,7 @@ const NotebookRender = ({ notes, notebook, updateParent, sortDirection, sortType
 					fromDeleteModal={false}
 					closeModal={closeModal} />
 			).sort((a, b) => new Date(b.props.note.timestamp) - new Date(a.props.note.timestamp));
-		if (!sortDirection) messageArray.reverse();
+		if (sortDirection) messageArray.reverse();
 
 		/* Search Filter */
 		if (searchInput && searchInput !== '')
@@ -51,9 +51,9 @@ const NotebookRender = ({ notes, notebook, updateParent, sortDirection, sortType
 };
 
 module.exports = () => {
-	const [sortType, setSortType] = useState(false);
+	const [sortType, setSortType] = useState(true);
 	const [searchInput, setSearchInput] = useState('');
-	const [sortDirection, setSortDirection] = useState(false);
+	const [sortDirection, setSortDirection] = useState(true);
 	const [currentNotebook, setCurrentNotebook] = useState('Main');
 	// since hooks don't have a native forceUpdate() function this is the easisest workaround
 	const forceUpdate = useState(0)[1];
@@ -139,7 +139,7 @@ module.exports = () => {
 						<Text className={Classes.QuickSelect.quickSelectLabel}>Change Sorting:</Text>
 						<Flex grow={0} align={Flex.Align.CENTER} className={Classes.QuickSelect.quickSelectClick}>
 							<Text class={Classes.QuickSelect.quickSelectValue}>
-								{sortDirection ? 'Descending' : 'Ascending'} /
+								{sortDirection ? 'Ascending' : 'Descending'} /
 								{sortType ? ' Date Added' : ' Message Date'}
 							</Text>
 							<div className={Classes.QuickSelect.quickSelectArrow} />
