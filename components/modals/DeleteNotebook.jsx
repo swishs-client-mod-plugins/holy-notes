@@ -1,15 +1,15 @@
-const { FormTitle, Button } = require('powercord/components')
-const { Modal } = require('powercord/components/modal')
-const { AdvancedScrollerThin } = require('powercord/components')
-const { close: closeModal } = require('powercord/modal')
-const { React } = require('powercord/webpack')
+const { FormTitle, Button } = require('powercord/components');
+const { Modal } = require('powercord/components/modal');
+const { AdvancedScrollerThin } = require('powercord/components');
+const { close: closeModal } = require('powercord/modal');
+const { React } = require('powercord/webpack');
 
-const NoResultsMessage = require('../sections/NoResultsMessage')
-const RenderMessage = require('../sections/RenderMessage')
-const NotesHandler = new (require('../../NotesHandler'))()
+const NoResultsMessage = require('../sections/NoResultsMessage');
+const RenderMessage = require('../sections/RenderMessage');
+const NotesHandler = new (require('../../NotesHandler'))();
 
-module.exports = ({ notebook }) => {
-	const notes = NotesHandler.getNotes()[notebook]
+module.exports = ({ notebook, setNotebook }) => {
+	const notes = NotesHandler.getNotes()[notebook];
 	return (
 		<Modal className='delete-notebook' size={Modal.Sizes.LARGE}>
 			<Modal.Header>
@@ -32,8 +32,9 @@ module.exports = ({ notebook }) => {
 			<Modal.Footer>
 				<Button
 					onClick={() => {
-						NotesHandler.deleteNotebook(notebook)
-						closeModal()
+						NotesHandler.deleteNotebook(notebook);
+						setNotebook('Main');
+						closeModal();
 					}}
 					color={Button.Colors.RED}>
 					Delete
@@ -46,5 +47,5 @@ module.exports = ({ notebook }) => {
 				</Button>
 			</Modal.Footer>
 		</Modal>
-	)
-}
+	);
+};

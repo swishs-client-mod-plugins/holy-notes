@@ -1,4 +1,4 @@
-const { React } = require('powercord/webpack')
+const { React } = require('powercord/webpack');
 
 module.exports = React.memo(
   (props) => (
@@ -9,4 +9,4 @@ module.exports = React.memo(
       />
     </svg>
   )
-)
+);

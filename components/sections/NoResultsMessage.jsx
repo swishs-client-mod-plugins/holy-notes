@@ -1,11 +1,11 @@
-const { React, getModule } = require('powercord/webpack')
+const { React, getModule } = require('powercord/webpack');
 
 const classes = {
 	...getModule(['emptyResultsWrap'], false)
-}
+};
 
 module.exports = ({ error }) => {
-	if (error) console.log(error)
+	if (error) console.log(error);
 	if (error) { // not functional yet
 		return (
 			<div className={classes.emptyResultsWrap}>
@@ -16,7 +16,7 @@ module.exports = ({ error }) => {
 					</div>
 				</div>
 			</div>
-		)
+		);
 	} else if (Math.floor(Math.random() * 100) <= 10) {
 		return (
 			<div className={classes.emptyResultsWrap}>
@@ -27,7 +27,7 @@ module.exports = ({ error }) => {
 					</div>
 				</div>
 			</div>
-		)
+		);
 	} else {
 		return (
 			<div className={classes.emptyResultsWrap}>
@@ -38,6 +38,6 @@ module.exports = ({ error }) => {
 					</div>
 				</div>
 			</div>
-		)
+		);
 	}
-}
+};

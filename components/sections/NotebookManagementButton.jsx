@@ -1,19 +1,19 @@
-const { Button } = require('powercord/components')
-const { open: openModal } = require('powercord/modal')
-const { React } = require('powercord/webpack')
+const { Button } = require('powercord/components');
+const { open: openModal } = require('powercord/modal');
+const { React } = require('powercord/webpack');
 
-const DeleteNotebook = require('../modals/DeleteNotebook')
-const CreateNotebook = require('../modals/CreateNotebook')
+const DeleteNotebook = require('../modals/DeleteNotebook');
+const CreateNotebook = require('../modals/CreateNotebook');
 
-module.exports = ({ notebook }) => {
-	if (notebook != 'Main') {
+module.exports = (args) => {
+	if (args.notebook != 'Main') {
 		return <>
 			<Button
 				color={Button.Colors.RED}
-				onClick={() => openModal(() => <DeleteNotebook notebook={notebook} />)}>
+				onClick={() => openModal(() => <DeleteNotebook {...args} />)}>
 				Delete Notebook
 			</Button>
-		</>
+		</>;
 	} else {
 		return <>
 			<Button
@@ -21,6 +21,6 @@ module.exports = ({ notebook }) => {
 				onClick={() => openModal(() => <CreateNotebook />)}>
 				Create Notebook
 			</Button>
-		</>
+		</>;
 	}
-}
+};

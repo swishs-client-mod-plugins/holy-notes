@@ -1,22 +1,27 @@
-const { TabBar, AdvancedScrollerThin, Button } = require('powercord/components')
-const { FormTitle, Flex, Icon, Tooltip } = require('powercord/components')
-const { close: closeModal, open: openModal } = require('powercord/modal')
-const { React, React: { useState }, getModule } = require('powercord/webpack')
-const { Modal } = require('powercord/components/modal')
+const { Modal } = require('powercord/components/modal');
+const { close: closeModal, open: openModal } = require('powercord/modal');
+const { React, React: { useState }, getModule, contextMenu } = require('powercord/webpack');
+const { TabBar, AdvancedScrollerThin, Button, FormTitle, Icon, Text, Flex } = require('powercord/components');
 
-const NoResultsMessage = require('../sections/NoResultsMessage')
-const RenderMessage = require('../sections/RenderMessage')
-const NotebookManagementButton = require('../sections/NotebookManagementButton')
-const HelpModal = require('./HelpModal')
+const HelpModal = require('./HelpModal');
+const RenderMessage = require('../sections/RenderMessage');
+const NoResultsMessage = require('../sections/NoResultsMessage');
+const NotebookManagementButton = require('../sections/NotebookManagementButton');
 
-const NotesHandler = new (require('../../NotesHandler'))()
-const SearchBar = getModule(m => m.defaultProps?.useKeyboardNavigation, false)
+const Classes = {
+	TabBar: getModule(['tabBarContainer'], false),
+	QuickSelect: getModule(['quickSelect'], false)
+};
+
+const NotesHandler = new (require('../../NotesHandler'))();
+const ContextMenu = getModule(['MenuGroup', 'MenuItem'], false);
+const SearchBar = getModule(m => m.defaultProps?.useKeyboardNavigation, false);
 
 const NotebookRender = ({ notes, notebook, updateParent, sortDirection, sortType, searchInput }) => {
 	if (Object.keys(notes).length === 0) {
-		return <NoResultsMessage error={false} />
+		return <NoResultsMessage error={false} />;
 	} else {
-		let messageArray
+		let messageArray;
 		sortType ?
 			messageArray = Object.keys(notes).map(note =>
 				<RenderMessage
@@ -33,33 +38,33 @@ const NotebookRender = ({ notes, notebook, updateParent, sortDirection, sortType
 					updateParent={updateParent}
 					fromDeleteModal={false}
 					closeModal={closeModal} />
-			).sort((a, b) => new Date(b.props.note.timestamp) - new Date(a.props.note.timestamp))
-		if (!sortDirection) messageArray.reverse()
+			).sort((a, b) => new Date(b.props.note.timestamp) - new Date(a.props.note.timestamp));
+		if (!sortDirection) messageArray.reverse();
 
 		/* Search Filter */
 		if (searchInput && searchInput !== '')
 			messageArray = messageArray.filter(m =>
 				m.props.note.content.toLowerCase()
-					.indexOf(searchInput.trim()) > -1)
-		return messageArray
+					.indexOf(searchInput.trim()) > -1);
+		return messageArray;
 	}
-}
+};
 
 module.exports = () => {
-	const classes = getModule(['tabBarContainer'], false)
-	const [currentNotebook, setCurrentNotebook] = useState('Main')
-	const [searchInput, setSearchInput] = useState('')
-	const [sortDirection, setSortDirection] = useState(false)
-	const [sortType, setSortType] = useState(false)
+	const [sortType, setSortType] = useState(false);
+	const [searchInput, setSearchInput] = useState('');
+	const [sortDirection, setSortDirection] = useState(false);
+	const [currentNotebook, setCurrentNotebook] = useState('Main');
 	// since hooks don't have a native forceUpdate() function this is the easisest workaround
-	const forceUpdate = useState(0)[1]
-	const notes = NotesHandler.getNotes()[currentNotebook]
+	const forceUpdate = useState(0)[1];
+	const notes = NotesHandler.getNotes()[currentNotebook];
+	if (!notes) return <></>;
 	return (
 		<Modal className='notebook' size={Modal.Sizes.LARGE} style={{ borderRadius: '8px' }}>
 			<Flex className={`notebook-flex`} direction={Flex.Direction.VERTICAL} style={{ width: '100%' }}>
-				<div className={classes.topSectionNormal}>
-					<Modal.Header className={classes.header}>
-						<FormTitle tag='h4' className='notebook-header'>
+				<div className={Classes.TabBar.topSectionNormal}>
+					<Modal.Header className={`${Classes.TabBar.header} notebook-header-main`}>
+						<FormTitle tag='h4' className='notebook-heading'>
 							NOTEBOOK
 						</FormTitle>
 						<Icon
@@ -75,14 +80,16 @@ module.exports = () => {
 							query={searchInput} />
 						<Modal.CloseButton onClick={closeModal} />
 					</Modal.Header>
-					<div className={classes.tabBarContainer}>
+					<div className={Classes.TabBar.tabBarContainer}>
 						<TabBar
-							className={classes.tabBar}
+							className={`${Classes.TabBar.tabBar} notebook-tabbar`}
 							selectedItem={currentNotebook}
 							type={TabBar.Types.TOP}
 							onItemSelect={setCurrentNotebook}>
 							{Object.keys(NotesHandler.getNotes()).map(notebook =>
-								<TabBar.Item className={classes.tabBarItem} id={notebook}>{notebook}</TabBar.Item>
+								<TabBar.Item id={notebook} className={`${Classes.TabBar.tabBarItem} notebook-tabbar-item`}>
+									{notebook}
+								</TabBar.Item>
 							)}
 						</TabBar>
 					</div>
@@ -100,7 +107,9 @@ module.exports = () => {
 				</Modal.Content>
 			</Flex>
 			<Modal.Footer>
-				<NotebookManagementButton notebook={currentNotebook} />
+				<NotebookManagementButton
+					notebook={currentNotebook}
+					setNotebook={setCurrentNotebook} />
 				<Button
 					style={{ paddingLeft: '5px', paddingRight: '10px' }}
 					look={Button.Looks.LINK}
@@ -109,27 +118,36 @@ module.exports = () => {
 					Cancel
 				</Button>
 				<div className='sort-button-container notebook-display-left'>
-					<Button
-						className='sort-button-text'
-						color={Button.Colors.TRANSPARENT}
-						onClick={() => setSortType(!sortType)}>
-						{sortType ? 'Date Added' : 'Message Date'}
-					</Button>
-					<Button
-						className='sort-button-icon'
-						color={Button.Colors.TRANSPARENT}
-						onClick={() => setSortDirection(!sortDirection)}>
-						{sortDirection
-							? <Tooltip text='New to Old' position='top'>
-								<Icon name='ArrowDropDown' />
-							</Tooltip>
-							: <Tooltip text='Old to New' position='top'>
-								<Icon name='ArrowDropUp' />
-							</Tooltip>
-						}
-					</Button>
+					<Flex align={Flex.Align.CENTER} className={Classes.QuickSelect.quickSelect} onClick={(event) => {
+						contextMenu.openContextMenu(event, () => (
+							<ContextMenu.default onClose={contextMenu.closeContextMenu}>
+								<ContextMenu.MenuItem
+									label='Ascending / Date Added' id='ada'
+									action={() => { setSortDirection(true); setSortType(true); }} />
+								<ContextMenu.MenuItem
+									label='Ascending / Message Date' id='amd'
+									action={() => { setSortDirection(true); setSortType(false); }} />
+								<ContextMenu.MenuItem
+									label='Descending / Date Added' id='dda'
+									action={() => { setSortDirection(false); setSortType(true); }} />
+								<ContextMenu.MenuItem
+									label='Descending / Message Date' id='dmd'
+									action={() => { setSortDirection(false); setSortType(false); }} />
+							</ContextMenu.default>
+						));
+					}}>
+						<Text className={Classes.QuickSelect.quickSelectLabel}>Change Sorting:</Text>
+						<Flex grow={0} align={Flex.Align.CENTER} className={Classes.QuickSelect.quickSelectClick}>
+							<Text class={Classes.QuickSelect.quickSelectValue}>
+								{sortDirection ? 'Descending' : 'Ascending'} /
+								{sortType ? ' Date Added' : ' Message Date'}
+							</Text>
+							<div className={Classes.QuickSelect.quickSelectArrow} />
+						</Flex>
+					</Flex>
+					<div />
 				</div>
 			</Modal.Footer>
 		</Modal>
-	)
-}
+	);
+};

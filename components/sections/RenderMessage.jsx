@@ -1,30 +1,30 @@
-const { getModule, contextMenu, React, React: { useEffect } } = require('powercord/webpack')
-const { clipboard } = require('electron')
+const { getModule, contextMenu, React, React: { useEffect } } = require('powercord/webpack');
+const { clipboard } = require('electron');
 
-const User = getModule(m => m.prototype?.tag, false)
-const NotesHandler = new (require('../../NotesHandler'))()
-const ContextMenu = getModule(['MenuGroup', 'MenuItem'], false)
-const transitionTo = getModule(['transitionTo'], false).transitionTo
-const Timestamp = getModule(m => m.prototype?.toDate && m.prototype.month, false)
-const ChannelMessage = getModule(m => m.type?.displayName === 'ChannelMessage', false)
-const Message = getModule(m => m.prototype?.getReaction && m.prototype.isSystemDM, false)
-const Channel = getModule(m => m.prototype?.getGuildId, false)
+const User = getModule(m => m.prototype?.tag, false);
+const NotesHandler = new (require('../../NotesHandler'))();
+const ContextMenu = getModule(['MenuGroup', 'MenuItem'], false);
+const transitionTo = getModule(['transitionTo'], false).transitionTo;
+const Timestamp = getModule(m => m.prototype?.toDate && m.prototype.month, false);
+const ChannelMessage = getModule(m => m.type?.displayName === 'ChannelMessage', false);
+const Message = getModule(m => m.prototype?.getReaction && m.prototype.isSystemDM, false);
+const Channel = getModule(m => m.prototype?.getGuildId, false);
 
 module.exports = ({ note, notebook, updateParent, fromDeleteModal, closeModal }) => {
-  const classes = getModule(['cozyMessage'], false)
+  const classes = getModule(['cozyMessage'], false);
 
-  let isHoldingDelete
+  let isHoldingDelete;
   useEffect(() => {
-    const deleteHandler = (e) => e.key === 'Delete' && (isHoldingDelete = e.type === 'keydown')
-    
-    document.addEventListener('keydown', deleteHandler)
-    document.addEventListener('keyup', deleteHandler)
+    const deleteHandler = (e) => e.key === 'Delete' && (isHoldingDelete = e.type === 'keydown');
+
+    document.addEventListener('keydown', deleteHandler);
+    document.addEventListener('keyup', deleteHandler);
 
     return () => {
-      document.removeEventListener('keydown', deleteHandler)
-      document.removeEventListener('keyup', deleteHandler)
-    }
-  }, [])
+      document.removeEventListener('keydown', deleteHandler);
+      document.removeEventListener('keyup', deleteHandler);
+    };
+  }, []);
 
   return (
     <div className='holy-note'>
@@ -54,8 +54,8 @@ module.exports = ({ note, notebook, updateParent, fromDeleteModal, closeModal })
         channel={new Channel({ id: 'holy-notes' })}
         onClick={() => {
           if (isHoldingDelete && !fromDeleteModal) {
-            NotesHandler.deleteNote(note.id, notebook)
-            updateParent()
+            NotesHandler.deleteNote(note.id, notebook);
+            updateParent();
           }
         }}
         onContextMenu={event => {
@@ -69,12 +69,12 @@ module.exports = ({ note, notebook, updateParent, fromDeleteModal, closeModal })
                   closeModal={closeModal}
                 />
               )
-            )
+            );
         }}
       />
     </div>
-  )
-}
+  );
+};
 
 const NoteContextMenu = ({ note, notebook, updateParent, closeModal }) => {
   return <>
@@ -82,8 +82,8 @@ const NoteContextMenu = ({ note, notebook, updateParent, closeModal }) => {
       <ContextMenu.MenuItem
         label='Jump to Message' id='jump'
         action={() => {
-          transitionTo(`/channels/${note.guild_id ?? '@me'}/${note.channel_id}/${note.id}`)
-          closeModal()
+          transitionTo(`/channels/${note.guild_id ?? '@me'}/${note.channel_id}/${note.id}`);
+          closeModal();
         }} />
       <ContextMenu.MenuItem
         label='Copy Text' id='ctext'
@@ -92,8 +92,8 @@ const NoteContextMenu = ({ note, notebook, updateParent, closeModal }) => {
         color='colorDanger'
         label='Delete Note' id='delete'
         action={() => {
-          NotesHandler.deleteNote(note.id, notebook)
-          updateParent()
+          NotesHandler.deleteNote(note.id, notebook);
+          updateParent();
         }} />
       {Object.keys(NotesHandler.getNotes()).length !== 1 ?
         <ContextMenu.MenuItem
@@ -104,10 +104,10 @@ const NoteContextMenu = ({ note, notebook, updateParent, closeModal }) => {
                 <ContextMenu.MenuItem
                   label={`Move to ${key}`} id={key}
                   action={() => {
-                    NotesHandler.moveNote(note, key, notebook)
-                    updateParent()
+                    NotesHandler.moveNote(note, key, notebook);
+                    updateParent();
                   }} />
-              )
+              );
             }
           }
           )}
@@ -116,5 +116,5 @@ const NoteContextMenu = ({ note, notebook, updateParent, closeModal }) => {
         label='Copy ID' id='cid'
         action={() => clipboard.writeText(note.id)} />
     </ContextMenu.default>
-  </>
-}
+  </>;
+};

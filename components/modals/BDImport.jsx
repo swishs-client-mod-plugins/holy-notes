@@ -1,25 +1,33 @@
-const { FormTitle, AdvancedScrollerThin, Button } = require('powercord/components')
-const { Modal } = require('powercord/components/modal')
-const { close: closeModal } = require('powercord/modal')
-const { React } = require('powercord/webpack')
-const { TextAreaInput, TextInput } = require('powercord/components/settings')
-const { useState } = React
+const { Modal } = require('powercord/components/modal');
+const { close: closeModal } = require('powercord/modal');
+const { React, getModuleByDisplayName } = require('powercord/webpack');
+const { FormTitle, AdvancedScrollerThin, Button } = require('powercord/components');
+const { useState } = React;
 
-const NotesHandler = new (require('../../NotesHandler'))()
+const Divider = getModuleByDisplayName('Divider', false);
+const TextArea = getModuleByDisplayName('TextArea', false);
+const TextInput = getModuleByDisplayName('TextInput', false);
+const NotesHandler = new (require('../../NotesHandler'))();
 module.exports = () => {
-  const [PersonalPinsData, setPersonalPinsData] = useState('')
-  const [Notebook, setNotebook] = useState('PersonalPins')
+  const [personalPinsData, setPersonalPinsData] = useState('');
+  const [notebook, setNotebook] = useState('PersonalPins');
   return (
     <Modal className='bd-const-modal' size={Modal.Sizes.LARGE}>
-      <Modal.Header>
+      <Modal.Header className='notebook-header'>
         <FormTitle tag='h3'>Import from PersonalPins</FormTitle>
         <Modal.CloseButton onClick={closeModal} />
       </Modal.Header>
       <Modal.Content>
         <AdvancedScrollerThin fade={true}>
-          <TextAreaInput
-            autofocus={true}
+          <FormTitle>
+            Input the text from your "PersonalPins.config.json" file located in your BD Plugins folder.
+          </FormTitle>
+          <TextArea
+            rows={7}
             autosize={true}
+            autofocus={true}
+            resizeable={false}
+            value={personalPinsData}
             onChange={setPersonalPinsData}
             placeholder={[
               '{',
@@ -29,36 +37,34 @@ module.exports = () => {
               '  "defaultSort": "notetime"',
               '  },',
               '  "notes": {',
-            ].join('\n')}
-            resizeable={false}
-            rows={7}
-            value={PersonalPinsData}>
-            Input the text from your "PersonalPins.config.json" file located in your BD Plugins folder.
-          </TextAreaInput>
+            ].join('\n')}>
+          </TextArea>
+          <Divider style={{ marginTop: '20px' }} />
+          <FormTitle>Add to Notebook</FormTitle>
           <TextInput
-            note='You can add the notes to pre-existing notebooks!'
+            hideBorder={true}
+            onChange={setNotebook}
             defaultValue={'PersonalPins'}
-            onChange={setNotebook}>
-            Add to Notebook
-          </TextInput>
+            style={{ marginBottom: '10px' }}
+            note='You can add the notes to pre-existing notebooks!' />
         </AdvancedScrollerThin>
       </Modal.Content>
       <Modal.Footer>
         <Button
           color={Button.Colors.GREEN}
           onClick={() => {
-            NotesHandler.parseBDNotes(PersonalPinsData, Notebook)
-            closeModal()
+            NotesHandler.parseBDNotes(personalPinsData, notebook);
+            closeModal();
           }}>
           Parse Data
         </Button>
         <Button
+          onClick={closeModal}
           look={Button.Looks.LINK}
-          color={Button.Colors.TRANSPARENT}
-          onClick={closeModal}>
+          color={Button.Colors.TRANSPARENT}>
           Cancel
         </Button>
       </Modal.Footer>
     </Modal>
-  )
-}
+  );
+};
