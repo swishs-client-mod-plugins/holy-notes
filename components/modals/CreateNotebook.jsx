@@ -18,10 +18,10 @@ module.exports = () => {
 				<FormTitle>Notebook Name</FormTitle>
 				<TextInput
 					hideBorder={true}
-					value={this.range}
+					value={notebookName}
 					placeholder='JS Snippets'
-					style={{ marginBottom: '10px' }}
-					onChange={value => setNotebookName(value)} />
+					onChange={setNotebookName}
+					style={{ marginBottom: '10px' }} />
 			</Modal.Content>
 			<Modal.Footer>
 				<Button
